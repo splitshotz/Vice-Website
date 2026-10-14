@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://eklonofficial.github.io/Vice-Website/sitemap.xml
+Sitemap: https://splitshotz.github.io/Vice-Website/sitemap.xml

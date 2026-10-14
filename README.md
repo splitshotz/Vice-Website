@@ -1,6 +1,6 @@
 # Vice Website
 
-A static landing page for [Vice](https://github.com/eklonofficial/Vice), the instant-replay game clipper for Linux.
+A static landing page for [Vice](https://github.com/splitshotz/Vice), the instant-replay game clipper for Linux.
 
 The page uses local Syne ExtraBold and Figtree fonts. Its orange theme is a synchronized copy of the blue page revealed by a pointer-following CSS clip path.
 
