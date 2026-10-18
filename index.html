@@ -80,13 +80,13 @@
     <nav class="rail" aria-label="Sections">
       <div class="rail-tape" aria-hidden="true"><div class="rail-fill"></div></div>
       <ol class="rail-marks">
-        <li><a href="#how" data-mark><i></i><span>How it works</span></a></li>
         <li><a href="#share" data-mark><i></i><span>Sharing</span></a></li>
-        <li><a href="#recording" data-mark><i></i><span>Recording</span></a></li>
-        <li><a href="#editor" data-mark><i></i><span>Editor</span></a></li>
         <li><a href="#overlay" data-mark><i></i><span>Overlay</span></a></li>
-        <li><a href="#beyond" data-mark><i></i><span>Beyond games</span></a></li>
+        <li><a href="#editor" data-mark><i></i><span>Editor</span></a></li>
+        <li><a href="#recording" data-mark><i></i><span>Recording</span></a></li>
         <li><a href="#library" data-mark><i></i><span>Library</span></a></li>
+        <li><a href="#beyond" data-mark><i></i><span>Beyond games</span></a></li>
+        <li><a href="#how" data-mark><i></i><span>How it works</span></a></li>
         <li><a href="#install" data-mark><i></i><span>Install</span></a></li>
       </ol>
       <p class="rail-time" aria-hidden="true"><span data-time>0:00</span> / 2:00</p>
@@ -174,30 +174,6 @@
         </figure>
       </section>
 
-      <!-- ── The buffer ───────────────────────────────────────────────── -->
-      <section class="how" id="how" aria-labelledby="how-title">
-        <h2 id="how-title">Press the key after it happens.</h2>
-        <p class="how-lede">
-          Vice holds the last two minutes in memory, so you never have to remember to start recording
-          before the good part. Press your clip key and the last 20 seconds become a clip. The key, the
-          length and the buffer are all yours to set. Until you press it, nothing is written to disk.
-        </p>
-        <figure class="buffer" aria-label="A two minute buffer held in memory, with the last 20 seconds marked as the clip you keep">
-          <div class="buffer-track">
-            <div class="buffer-tape"></div>
-            <div class="buffer-keep"><span>Kept</span></div>
-          </div>
-          <div class="buffer-scale" aria-hidden="true">
-            <span>In memory, 2:00</span><span>1:30</span><span>1:00</span><span>0:30</span><span>Now</span>
-          </div>
-        </figure>
-        <ol class="steps">
-          <li><b>Play or work.</b> Vice keeps the last two minutes in memory. Your frame rate drops by less than 1%.</li>
-          <li><b>Press your key.</b> F9 unless you pick another. The last 20 seconds save as a clip, and a double-tap records a whole match.</li>
-          <li><b>Keep it or send it.</b> Trim it, edit it, file it in a playlist, or copy its link.</li>
-        </ol>
-      </section>
-
       <!-- ── Sharing ──────────────────────────────────────────────────── -->
       <section class="block block-primary" id="share" aria-labelledby="share-title">
         <div class="block-copy">
@@ -231,56 +207,6 @@
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- ── Recording ────────────────────────────────────────────────── -->
-      <section class="split" id="recording" aria-labelledby="rec-title">
-        <div class="split-copy">
-          <h2 id="rec-title">Your game keeps its frame rate.</h2>
-          <p>
-            Recording runs on the part of your graphics card made for video, not on the cores your game
-            needs, so leaving Vice on costs you less than 1% of your frame rate. NVIDIA, AMD and Intel all work.
-          </p>
-        </div>
-        <div class="figures" aria-label="Recording at a glance">
-          <div class="fig fig-a"><i data-shape="burst" aria-hidden="true"></i><b>&lt;1%</b><span>off your frame rate</span></div>
-          <div class="fig fig-b"><i data-shape="cookie9" aria-hidden="true"></i><b>144</b><span>fps, if your game runs it</span></div>
-          <div class="fig fig-c"><i data-shape="clover8" aria-hidden="true"></i><b>AV1</b><span>smaller files, same quality</span></div>
-        </div>
-        <div class="split-ticks">
-          <h3 class="ticks-head">Set it up your way</h3>
-          <ul class="ticks">
-            <li><b>Every sound on its own track.</b> Game, voice chat and mic recorded separately, each with its own volume.</li>
-            <li><b>The game window or the whole screen.</b> One tile on Home switches between them, so Discord and notifications can stay out.</li>
-            <li><b>Any key, any length.</b> Your own combos, and extra keys that each save a different length.</li>
-            <li><b>Quality where you want it.</b> Frame rate, resolution, codec and 10-bit colour, or leave it on Auto.</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ── Editor ───────────────────────────────────────────────────── -->
-      <section class="block block-tertiary editor" id="editor" aria-labelledby="editor-title">
-        <div class="block-copy">
-          <h2 id="editor-title">Cut the montage without leaving Vice.</h2>
-          <p>
-            Drop clips on a timeline, trim and arrange them, add titles and transitions, then export an
-            MP4. One switch makes it fit Discord's upload limit.
-          </p>
-          <ul class="pills" aria-label="Transitions">
-            <li>Crossfade</li><li>Fade to black</li><li>Fade to white</li>
-            <li>Dip to accent</li><li>Blur dissolve</li><li>Slide</li>
-          </ul>
-        </div>
-        <figure class="frame frame-editor">
-          <img
-            src="assets/shots/blue/editor.webp"
-            data-shot="editor"
-            width="2000"
-            height="1250"
-            alt="The Vice editor with five clips on a timeline, transitions between them and a title over the preview"
-            loading="lazy"
-          />
-        </figure>
       </section>
 
       <!-- ── Keyboard overlay ─────────────────────────────────────────── -->
@@ -330,34 +256,53 @@
         </figure>
       </section>
 
-      <!-- ── Beyond games ─────────────────────────────────────────────── -->
-      <section class="beyond" id="beyond" aria-labelledby="beyond-title">
-        <figure class="frame frame-viewer">
+      <!-- ── Editor ───────────────────────────────────────────────────── -->
+      <section class="block block-tertiary editor" id="editor" aria-labelledby="editor-title">
+        <div class="block-copy">
+          <h2 id="editor-title">Cut the montage without leaving Vice.</h2>
+          <p>
+            Drop clips on a timeline, trim and arrange them, add titles and transitions, then export an
+            MP4. One switch makes it fit Discord's upload limit.
+          </p>
+          <ul class="pills" aria-label="Transitions">
+            <li>Crossfade</li><li>Fade to black</li><li>Fade to white</li>
+            <li>Dip to accent</li><li>Blur dissolve</li><li>Slide</li>
+          </ul>
+        </div>
+        <figure class="frame frame-editor">
           <img
-            src="assets/shots/blue/viewer.webp"
-            data-shot="viewer"
-            width="1380"
-            height="1230"
-            alt="A clip open in the Vice viewer, with the keys pressed shown over the video and a highlight marked on the timeline"
+            src="assets/shots/blue/editor.webp"
+            data-shot="editor"
+            width="2000"
+            height="1250"
+            alt="The Vice editor with five clips on a timeline, transitions between them and a title over the preview"
             loading="lazy"
           />
         </figure>
-        <div class="beyond-copy">
-          <h2 id="beyond-title">Not only for games.</h2>
+      </section>
+
+      <!-- ── Recording ────────────────────────────────────────────────── -->
+      <section class="split" id="recording" aria-labelledby="rec-title">
+        <div class="split-copy">
+          <h2 id="rec-title">Your game keeps its frame rate.</h2>
           <p>
-            Vice records whatever is on your screen. Double-tap your clip key to record until you press it again, for a
-            tutorial, a bug report or a call you need to keep, and mark the moments that matter as you go.
+            Recording runs on the part of your graphics card made for video, not on the cores your game
+            needs, so leaving Vice on costs you less than 1% of your frame rate. NVIDIA, AMD and Intel all work.
           </p>
-          <div class="who">
-            <div>
-              <h3>Streaming</h3>
-              <p>Run Vice beside OBS. The overlay puts your keys on stream, Game Capture keeps Discord off it, and one key catches the moment you want to post later.</p>
-            </div>
-            <div>
-              <h3>Everything else</h3>
-              <p>Whole-screen sessions in one file, a screenshot key with a pen for marking things up, and Follow my mouse to record the monitor you are working on.</p>
-            </div>
-          </div>
+        </div>
+        <div class="figures" aria-label="Recording at a glance">
+          <div class="fig fig-a"><i data-shape="burst" aria-hidden="true"></i><b>&lt;1%</b><span>off your frame rate</span></div>
+          <div class="fig fig-b"><i data-shape="cookie9" aria-hidden="true"></i><b>144</b><span>fps, if your game runs it</span></div>
+          <div class="fig fig-c"><i data-shape="clover8" aria-hidden="true"></i><b>AV1</b><span>smaller files, same quality</span></div>
+        </div>
+        <div class="split-ticks">
+          <h3 class="ticks-head">Set it up your way</h3>
+          <ul class="ticks">
+            <li><b>Every sound on its own track.</b> Game, voice chat and mic recorded separately, each with its own volume.</li>
+            <li><b>The game window or the whole screen.</b> One tile on Home switches between them, so Discord and notifications can stay out.</li>
+            <li><b>Any key, any length.</b> Your own combos, and extra keys that each save a different length.</li>
+            <li><b>Quality where you want it.</b> Frame rate, resolution, codec and 10-bit colour, or leave it on Auto.</li>
+          </ul>
         </div>
       </section>
 
@@ -398,6 +343,61 @@
           <li><b>Copy video</b> puts the file itself on your clipboard, to paste anywhere.</li>
           <li><b>Rich Presence</b> shows the game you are clipping on Discord, with its icon.</li>
         </ul>
+      </section>
+
+      <!-- ── Beyond games ─────────────────────────────────────────────── -->
+      <section class="beyond" id="beyond" aria-labelledby="beyond-title">
+        <figure class="frame frame-viewer">
+          <img
+            src="assets/shots/blue/viewer.webp"
+            data-shot="viewer"
+            width="1380"
+            height="1230"
+            alt="A clip open in the Vice viewer, with the keys pressed shown over the video and a highlight marked on the timeline"
+            loading="lazy"
+          />
+        </figure>
+        <div class="beyond-copy">
+          <h2 id="beyond-title">Not only for games.</h2>
+          <p>
+            Vice records whatever is on your screen. Double-tap your clip key to record until you press it again, for a
+            tutorial, a bug report or a call you need to keep, and mark the moments that matter as you go.
+          </p>
+          <div class="who">
+            <div>
+              <h3>Streaming</h3>
+              <p>Run Vice beside OBS. The overlay puts your keys on stream, Game Capture keeps Discord off it, and one key catches the moment you want to post later.</p>
+            </div>
+            <div>
+              <h3>Everything else</h3>
+              <p>Whole-screen sessions in one file, a screenshot key with a pen for marking things up, and Follow my mouse to record the monitor you are working on.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── The buffer ───────────────────────────────────────────────── -->
+      <section class="how" id="how" aria-labelledby="how-title">
+        <h2 id="how-title">Press the key after it happens.</h2>
+        <p class="how-lede">
+          Vice holds the last two minutes in memory, so you never have to remember to start recording
+          before the good part. Press your clip key and the last 20 seconds become a clip. The key, the
+          length and the buffer are all yours to set. Until you press it, nothing is written to disk.
+        </p>
+        <figure class="buffer" aria-label="A two minute buffer held in memory, with the last 20 seconds marked as the clip you keep">
+          <div class="buffer-track">
+            <div class="buffer-tape"></div>
+            <div class="buffer-keep"><span>Kept</span></div>
+          </div>
+          <div class="buffer-scale" aria-hidden="true">
+            <span>In memory, 2:00</span><span>1:30</span><span>1:00</span><span>0:30</span><span>Now</span>
+          </div>
+        </figure>
+        <ol class="steps">
+          <li><b>Play or work.</b> Vice keeps the last two minutes in memory. Your frame rate drops by less than 1%.</li>
+          <li><b>Press your key.</b> F9 unless you pick another. The last 20 seconds save as a clip, and a double-tap records a whole match.</li>
+          <li><b>Keep it or send it.</b> Trim it, edit it, file it in a playlist, or copy its link.</li>
+        </ol>
       </section>
 
       <!-- ── The rest ─────────────────────────────────────────────────── -->
