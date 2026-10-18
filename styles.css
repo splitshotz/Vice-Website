@@ -220,7 +220,7 @@ main > section {
 }
 .demo-video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .demo-island {
-  position: absolute; top: 3.2cqi; left: 50%; transform: translateX(-50%);
+  position: absolute; top: 2.4cqi; right: 2.4cqi;
   display: flex; align-items: center; gap: 0.7em;
   padding: 0.65em 1.2em 0.65em 0.95em; border-radius: 999px;
   font-size: clamp(11px, 1.15cqi, 17px); font-weight: 650; white-space: nowrap;
