@@ -209,7 +209,7 @@ main > section {
   padding-bottom: 0.08em;
   font-size: clamp(1.4rem, 2.7vw, 2.6rem); line-height: 1.04; font-weight: 700; letter-spacing: -0.03em;
 }
-.hero-what { margin: 0 0 18px; max-width: 46ch; font-size: 1.1rem; color: var(--on-surface-variant); }
+.hero-what { margin: 0 0 24px; max-width: 46ch; font-size: 1.15rem; line-height: 1.5; color: var(--on-surface-variant); }
 
 /* The stage: a real clip with Vice's own status, overlay and share toast. */
 .demo {
@@ -232,7 +232,7 @@ main > section {
 .demo-island[data-state='saved'] { background: var(--base); color: var(--on-base); padding-inline: 1.5em; }
 .demo-island[data-state='saved'] .demo-island-dot { background: var(--on-base); }
 .demo-island[data-state='saved'] .demo-island-meta { color: color-mix(in srgb, var(--on-base) 72%, transparent); }
-.keys.demo-keys { left: 2.4cqi; bottom: 17cqi; --u: 2.3cqi; }
+.keys.demo-keys { left: 2.4cqi; bottom: 21cqi; --u: 2.1cqi; }
 .demo-toast {
   position: absolute; right: 2.6cqi; bottom: 6.5cqi; width: min(34cqi, 380px);
   padding: 1.1em 1.3em; border-radius: 1.4em;
@@ -257,7 +257,7 @@ main > section {
 
 .hero-foot {
   display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px);
-  align-items: end; margin-top: clamp(28px, 3.5vw, 44px);
+  align-items: end; margin-top: clamp(40px, 5vw, 64px);
 }
 .install { max-width: 560px; }
 .facts { display: grid; gap: 8px; justify-self: end; text-align: right; color: var(--on-surface-variant); font-size: 15px; }
@@ -626,7 +626,7 @@ td.no { color: var(--on-surface-variant); }
   .demo-toast, .demo-island-meta { display: none; }
 }
 
-.demo-note { margin: 12px 4px 0; font-size: 12px; color: var(--on-surface-variant); opacity: 0.8; }
+.demo-note { margin: 10px 2px 0; font-size: 12px; color: var(--on-surface-variant); opacity: 0.8; }
 @media (max-width: 600px) {
   .hero-mark { font-size: 22.5vw; }
 }

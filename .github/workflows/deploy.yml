@@ -23,6 +23,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      # Pages lets browsers keep CSS and JS for ten minutes, so a fresh page
+      # could load with the previous stylesheet. Tie each asset to the commit.
+      - name: Stamp asset URLs
+        run: |
+          v="${GITHUB_SHA::8}"
+          sed -i -E "s#(href|src)=\"(styles\.css|accents\.css|script\.js)\"#\1=\"\2?v=$v\"#g" index.html
+          grep -c "?v=$v" index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
