@@ -126,6 +126,12 @@ p { text-wrap: pretty; }
 /* The hero carries the full-size mark; the bar's copy arrives once it leaves. */
 .bar[data-hero-visible] .brand .wordmark { opacity: 0; transform: translateY(6px); }
 .bar-end { display: flex; align-items: center; gap: 10px; }
+/* With the voxel surface the bar draws itself on a canvas and steps out of
+   the way of whatever is underneath; the controls keep a solid pill each. */
+.bar.voxel { background: none; backdrop-filter: none; isolation: isolate; }
+.bar-voxels { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: inherit; pointer-events: none; z-index: -1; }
+.bar.voxel .brand { background: var(--surface); border-radius: 999px; padding: 10px 16px 10px 12px; margin-left: -10px; }
+.bar.voxel .bar-end { background: var(--surface); border-radius: 999px; padding: 5px; margin-right: -5px; }
 
 .swatches { display: flex; gap: 6px; }
 .swatches button {

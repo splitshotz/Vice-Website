@@ -163,6 +163,182 @@
     }).observe(heroMark);
   }
 
+  // ── The bar as voxels ──────────────────────────────────────────────
+  // The bar's surface is a grid of square cells. Cells over text, images
+  // and controls on the page shrink away, cells next to them settle as a
+  // halftone fringe, and the rest close up into a solid bar.
+  if (bar && 'ResizeObserver' in window) voxelBar(bar);
+
+  function voxelBar(bar) {
+    const cv = document.createElement('canvas');
+    const ctx = cv.getContext('2d');
+    if (!ctx) return;
+    cv.className = 'bar-voxels';
+    cv.setAttribute('aria-hidden', 'true');
+    bar.prepend(cv);
+    bar.classList.add('voxel');
+
+    const CELL = 7;
+    const MARGIN = 4;
+    const RINGS = [0, 0.26, 0.45, 0.64, 0.82];
+    const TEXT = 'main h1, main h2, main h3, main p, main li, main dt, main dd, main th, main td, .foot nav a, .foot p';
+    const BOX = 'main img, main video, .demo, main .cmd, main .seg, main .btn, main kbd, main .pills li, .people a, .swatches-inline, .wordmark-foot';
+    let cols = 0, rows = 0, w = 0, h = 0, dpr = 1;
+    let vals = new Float32Array(0), want = new Float32Array(0), rate = new Float32Array(0), ring = new Uint8Array(0);
+    let shapes = [];
+    let surface = '', accent = '';
+    let running = false;
+
+    const readColours = () => {
+      const cs = getComputedStyle(root);
+      surface = cs.getPropertyValue('--surface').trim();
+      accent = cs.getPropertyValue('--base').trim();
+      kick();
+    };
+    new MutationObserver(readColours).observe(root, {attributes: true, attributeFilter: ['data-accent']});
+
+    function size() {
+      const r = bar.getBoundingClientRect();
+      dpr = Math.min(2, devicePixelRatio || 1);
+      w = r.width;
+      h = r.height;
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(h * dpr);
+      cols = Math.ceil(w / CELL);
+      rows = Math.ceil(h / CELL);
+      vals = new Float32Array(cols * rows).fill(1);
+      want = new Float32Array(cols * rows).fill(1);
+      rate = new Float32Array(cols * rows).map(() => (reduce ? 1 : 0.14 + Math.random() * 0.2));
+      ring = new Uint8Array(cols * rows);
+      kick();
+    }
+
+    // Page-space boxes, so scrolling needs no layout reads. Text is taken
+    // line by line, which is what lets the bar hug a paragraph's shape.
+    function collect() {
+      const out = [];
+      // A line's box includes the font's whole ascent and descent, which on
+      // display type reaches well past the letters, so text is trimmed to
+      // roughly cap height and baseline.
+      const add = (b, text) => {
+        if (!(b.width > 0 && b.height > 0)) return;
+        const t = text ? b.top + b.height * 0.2 : b.top;
+        const bt = text ? b.bottom - b.height * 0.16 : b.bottom;
+        out.push([b.left, t + scrollY, b.right, bt + scrollY]);
+      };
+      const range = document.createRange();
+      for (const el of document.querySelectorAll(TEXT)) {
+        if (!el.offsetParent || el.closest('.bar')) continue;
+        range.selectNodeContents(el);
+        for (const b of range.getClientRects()) add(b, true);
+      }
+      for (const el of document.querySelectorAll(BOX)) {
+        if (!el.offsetParent || el.closest('.bar')) continue;
+        add(el.getBoundingClientRect());
+      }
+      shapes = out;
+      kick();
+    }
+
+    function targets() {
+      const br = bar.getBoundingClientRect();
+      want.fill(1);
+      const top = br.top + scrollY - MARGIN;
+      const bottom = br.bottom + scrollY + MARGIN;
+      for (const [l, t, r, b] of shapes) {
+        if (b < top || t > bottom || r < br.left - MARGIN || l > br.right + MARGIN) continue;
+        const c0 = Math.max(0, Math.floor((l - MARGIN - br.left) / CELL));
+        const c1 = Math.min(cols - 1, Math.floor((r + MARGIN - br.left) / CELL));
+        const r0 = Math.max(0, Math.floor((t - MARGIN - (br.top + scrollY)) / CELL));
+        const r1 = Math.min(rows - 1, Math.floor((b + MARGIN - (br.top + scrollY)) / CELL));
+        for (let y = r0; y <= r1; y++) want.fill(0, y * cols + c0, y * cols + c1 + 1);
+      }
+      // Rings of cells growing back to full size around every gap.
+      const reach = RINGS.length - 1;
+      ring.fill(0);
+      for (let i = 0; i < want.length; i++) {
+        if (want[i] !== 0) continue;
+        const x = i % cols, y = (i / cols) | 0;
+        for (let dy = -reach; dy <= reach; dy++) {
+          const yy = y + dy;
+          if (yy < 0 || yy >= rows) continue;
+          for (let dx = -reach; dx <= reach; dx++) {
+            const xx = x + dx;
+            if (xx < 0 || xx >= cols) continue;
+            const j = yy * cols + xx;
+            const d = Math.max(Math.abs(dx), Math.abs(dy));
+            if (want[j] !== 0 && (!ring[j] || d < ring[j])) ring[j] = d;
+          }
+        }
+      }
+      for (let i = 0; i < want.length; i++) if (ring[i]) want[i] = RINGS[ring[i]];
+    }
+
+    function draw() {
+      targets();
+      let moving = false;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < vals.length; i++) {
+        const d = want[i] - vals[i];
+        if (Math.abs(d) > 0.01) {
+          vals[i] += d * rate[i];
+          moving = true;
+        } else vals[i] = want[i];
+      }
+      ctx.fillStyle = surface;
+      for (let pass = 0; pass < 2; pass++) {
+        if (pass) ctx.fillStyle = accent;
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const v = vals[y * cols + x];
+            if (v < 0.05) continue;
+            if (v >= 0.97) {
+              if (!pass) ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
+              continue;
+            }
+            // Smaller cells sit nearer the content and glow more.
+            if (pass) ctx.globalAlpha = Math.min(1, (1 - v) * 1.25);
+            const s = CELL * (0.25 + v * 0.62);
+            const o = (CELL - s) / 2;
+            ctx.fillRect(x * CELL + o, y * CELL + o, s, s);
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+      return moving;
+    }
+
+    let lastScroll = 0;
+    function tick() {
+      const moving = draw();
+      if (moving || performance.now() - lastScroll < 200) requestAnimationFrame(tick);
+      else running = false;
+    }
+    function kick() {
+      if (running || !cols) return;
+      running = true;
+      requestAnimationFrame(tick);
+    }
+
+    let collectTimer = 0;
+    addEventListener('scroll', () => {
+      lastScroll = performance.now();
+      kick();
+      // Reveal animations move things as they arrive, so look again once
+      // scrolling settles.
+      clearTimeout(collectTimer);
+      collectTimer = setTimeout(collect, 260);
+    }, {passive: true});
+    new ResizeObserver(size).observe(bar);
+    new ResizeObserver(() => collect()).observe(document.body);
+    addEventListener('load', collect);
+    for (const b of $$('[data-tab]')) b.addEventListener('click', () => setTimeout(collect, 0));
+    readColours();
+    size();
+    collect();
+  }
+
   // ── Screenshots in the page's colour ───────────────────────────────
   function themeShots() {
     const accent = current();
@@ -201,7 +377,7 @@
     }
     let active = -1;
     stops.forEach((at, i) => {
-      if (f >= at - 0.002) active = i;
+      if (f >= at) active = i;
     });
     marks.forEach((m, i) => m.toggleAttribute('data-active', i === active));
   }
