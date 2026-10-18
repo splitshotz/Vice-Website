@@ -451,7 +451,7 @@ kbd {
 /* The same panel vice/key_overlay.py draws: 44 px keys, 6 px gaps, 12 px
    padding and a 28 px corner, scaled to the frame. */
 .keys {
-  position: absolute; left: 3.2cqi; bottom: 9cqi;
+  position: absolute; left: 3.2cqi; bottom: 3.2cqi;
   --u: 4.2cqi;
   display: grid; gap: calc(var(--u) * 0.136); padding: calc(var(--u) * 0.27);
   border-radius: calc(var(--u) * 0.64);

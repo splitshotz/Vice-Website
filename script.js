@@ -178,13 +178,20 @@
     bar.prepend(cv);
     bar.classList.add('voxel');
 
-    const CELL = 7;
-    const MARGIN = 4;
-    const RINGS = [0, 0.26, 0.45, 0.64, 0.82];
+    const CELL = 6;
+    // Clearance kept around anything on the page.
+    const GAP = 10;
+    // Bar narrower than twice this is removed, and its corners round to it.
+    const MIN = 12;
+    // How far the halftone fringe runs before cells are full size again.
+    const FRINGE = 64;
     const TEXT = 'main h1, main h2, main h3, main p, main li, main dt, main dd, main th, main td, .foot nav a, .foot p';
-    const BOX = 'main img, main video, .demo, main .cmd, main .seg, main .btn, main kbd, main .pills li, .people a, .swatches-inline, .wordmark-foot';
+    const BOX =
+      'main img, main video, .demo, main .frame, main .cmd, main .seg, main .btn, main kbd, main .pills li, ' +
+      'main .block, main .get, main .get-card, main .group, main .who > div, main .table-wrap, main .fig i, ' +
+      'main .chat, main .buffer-track, .people a, .wordmark-foot';
     let cols = 0, rows = 0, w = 0, h = 0, dpr = 1;
-    let vals = new Float32Array(0), want = new Float32Array(0), rate = new Float32Array(0), ring = new Uint8Array(0);
+    let vals = new Float32Array(0), want = new Float32Array(0), rate = new Float32Array(0), dist = new Float32Array(0);
     let shapes = [];
     let surface = '', accent = '';
     let running = false;
@@ -208,110 +215,158 @@
       rows = Math.ceil(h / CELL);
       vals = new Float32Array(cols * rows).fill(1);
       want = new Float32Array(cols * rows).fill(1);
+      dist = new Float32Array(cols * rows);
       rate = new Float32Array(cols * rows).map(() => (reduce ? 1 : 0.14 + Math.random() * 0.2));
-      ring = new Uint8Array(cols * rows);
       kick();
     }
 
-    // Page-space boxes, so scrolling needs no layout reads. Text is taken
-    // line by line, which is what lets the bar hug a paragraph's shape.
+    // Page-space rounded boxes, so scrolling needs no layout reads. Text is
+    // taken line by line, which is what lets the bar hug a paragraph.
     function collect() {
       const out = [];
-      // A line's box includes the font's whole ascent and descent, which on
-      // display type reaches well past the letters, so text is trimmed to
-      // roughly cap height and baseline.
-      const add = (b, text) => {
+      const add = (b, radius, text) => {
         if (!(b.width > 0 && b.height > 0)) return;
+        // A line box includes the font's whole ascent and descent, which on
+        // display type reaches well past the letters.
         const t = text ? b.top + b.height * 0.2 : b.top;
         const bt = text ? b.bottom - b.height * 0.16 : b.bottom;
-        out.push([b.left, t + scrollY, b.right, bt + scrollY]);
+        const r = Math.min(radius, (b.right - b.left) / 2, (bt - t) / 2);
+        out.push([b.left, t + scrollY, b.right, bt + scrollY, r]);
       };
       const range = document.createRange();
       for (const el of document.querySelectorAll(TEXT)) {
         if (!el.offsetParent || el.closest('.bar')) continue;
         range.selectNodeContents(el);
-        for (const b of range.getClientRects()) add(b, true);
+        for (const b of range.getClientRects()) add(b, 6, true);
       }
       for (const el of document.querySelectorAll(BOX)) {
         if (!el.offsetParent || el.closest('.bar')) continue;
-        add(el.getBoundingClientRect());
+        add(el.getBoundingClientRect(), parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0);
       }
       shapes = out;
       kick();
     }
 
-    function targets() {
-      const br = bar.getBoundingClientRect();
-      want.fill(1);
-      const top = br.top + scrollY - MARGIN;
-      const bottom = br.bottom + scrollY + MARGIN;
-      for (const [l, t, r, b] of shapes) {
-        if (b < top || t > bottom || r < br.left - MARGIN || l > br.right + MARGIN) continue;
-        const c0 = Math.max(0, Math.floor((l - MARGIN - br.left) / CELL));
-        const c1 = Math.min(cols - 1, Math.floor((r + MARGIN - br.left) / CELL));
-        const r0 = Math.max(0, Math.floor((t - MARGIN - (br.top + scrollY)) / CELL));
-        const r1 = Math.min(rows - 1, Math.floor((b + MARGIN - (br.top + scrollY)) / CELL));
-        for (let y = r0; y <= r1; y++) want.fill(0, y * cols + c0, y * cols + c1 + 1);
-      }
-      // Rings of cells growing back to full size around every gap.
-      const reach = RINGS.length - 1;
-      ring.fill(0);
-      for (let i = 0; i < want.length; i++) {
-        if (want[i] !== 0) continue;
-        const x = i % cols, y = (i / cols) | 0;
-        for (let dy = -reach; dy <= reach; dy++) {
-          const yy = y + dy;
-          if (yy < 0 || yy >= rows) continue;
-          for (let dx = -reach; dx <= reach; dx++) {
-            const xx = x + dx;
-            if (xx < 0 || xx >= cols) continue;
-            const j = yy * cols + xx;
-            const d = Math.max(Math.abs(dx), Math.abs(dy));
-            if (want[j] !== 0 && (!ring[j] || d < ring[j])) ring[j] = d;
-          }
-        }
-      }
-      for (let i = 0; i < want.length; i++) if (ring[i]) want[i] = RINGS[ring[i]];
+    // Signed distance from a point to a rounded rectangle.
+    function sdBox(px, py, l, t, r, b, rad) {
+      const qx = Math.abs(px - (l + r) / 2) - (r - l) / 2 + rad;
+      const qy = Math.abs(py - (t + b) / 2) - (b - t) / 2 + rad;
+      return Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) + Math.min(Math.max(qx, qy), 0) - rad;
     }
 
-    function draw() {
+    function targets() {
+      const br = bar.getBoundingClientRect();
+      const top = br.top + scrollY;
+      const reach = GAP + FRINGE + MIN * 2;
+      const near = shapes.filter(
+        ([l, t, r, b]) => b > top - reach && t < top + h + reach && r > br.left - reach && l < br.left + w + reach,
+      );
+      for (let y = 0; y < rows; y++) {
+        const py = top + (y + 0.5) * CELL;
+        for (let x = 0; x < cols; x++) {
+          const px = br.left + (x + 0.5) * CELL;
+          let d = Infinity;
+          for (const [l, t, r, b, rad] of near) {
+            const s = sdBox(px, py, l, t, r, b, rad);
+            if (s < d) d = s;
+          }
+          dist[y * cols + x] = d;
+        }
+      }
+      // An opening: keep only bar that a disc of radius MIN fits inside,
+      // so no thin strands run through narrow spaces and corners round off.
+      const k = Math.ceil(MIN / CELL);
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const i = y * cols + x;
+          const d = dist[i];
+          if (d < GAP) {
+            want[i] = 0;
+            continue;
+          }
+          let held = false;
+          for (let dy = -k; dy <= k && !held; dy++) {
+            const yy = y + dy;
+            if (yy < 0 || yy >= rows) continue;
+            for (let dx = -k; dx <= k; dx++) {
+              const xx = x + dx;
+              if (xx < 0 || xx >= cols) continue;
+              if (Math.hypot(dx, dy) * CELL > MIN) continue;
+              if (dist[yy * cols + xx] >= GAP + MIN) {
+                held = true;
+                break;
+              }
+            }
+          }
+          const f = Math.min(1, (d - GAP) / FRINGE);
+          want[i] = held ? 0.16 + 0.84 * f * f * (3 - 2 * f) : 0;
+        }
+      }
+    }
+
+    // A soft diagonal band of accent that sweeps the bar now and then.
+    let scanAt = -1;
+    const SCAN_MS = 1500;
+    if (!reduce) {
+      setInterval(() => {
+        if (document.visibilityState !== 'visible') return;
+        scanAt = performance.now();
+        kick();
+      }, 7000);
+    }
+
+    function draw(now) {
       targets();
       let moving = false;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       for (let i = 0; i < vals.length; i++) {
         const d = want[i] - vals[i];
-        if (Math.abs(d) > 0.01) {
+        if (Math.abs(d) > 0.004) {
           vals[i] += d * rate[i];
           moving = true;
         } else vals[i] = want[i];
       }
+      // Cells leave a 1 px seam, so the solid bar keeps the same grain as
+      // the dissolving edge. Size and glow follow the value continuously,
+      // which is what lets the edge fade out rather than stop.
+      const full = CELL - 1;
       ctx.fillStyle = surface;
-      for (let pass = 0; pass < 2; pass++) {
-        if (pass) ctx.fillStyle = accent;
-        for (let y = 0; y < rows; y++) {
-          for (let x = 0; x < cols; x++) {
-            const v = vals[y * cols + x];
-            if (v < 0.05) continue;
-            if (v >= 0.97) {
-              if (!pass) ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
-              continue;
-            }
-            // Smaller cells sit nearer the content and glow more.
-            if (pass) ctx.globalAlpha = Math.min(1, (1 - v) * 1.25);
-            const s = CELL * (0.25 + v * 0.62);
-            const o = (CELL - s) / 2;
-            ctx.fillRect(x * CELL + o, y * CELL + o, s, s);
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const v = vals[y * cols + x];
+          if (v < 0.05) continue;
+          const s = full * (0.2 + 0.8 * v);
+          const o = (CELL - s) / 2;
+          ctx.fillRect(x * CELL + o, y * CELL + o, s, s);
+        }
+      }
+      const scan = scanAt >= 0 ? (now - scanAt) / SCAN_MS : -1;
+      if (scan > 1) scanAt = -1;
+      ctx.fillStyle = accent;
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const v = vals[y * cols + x];
+          if (v < 0.05) continue;
+          let a = Math.max(0, 1 - v) * 1.15;
+          if (scan >= 0 && scan <= 1) {
+            const band = x * CELL - y * CELL * 0.8 - (scan * (w + 260) - 130);
+            a += 0.35 * Math.exp(-(band * band) / 3200);
           }
+          if (a < 0.02) continue;
+          ctx.globalAlpha = Math.min(1, a);
+          const s = full * (0.2 + 0.8 * v);
+          const o = (CELL - s) / 2;
+          ctx.fillRect(x * CELL + o, y * CELL + o, s, s);
         }
       }
       ctx.globalAlpha = 1;
-      return moving;
+      return moving || scanAt >= 0;
     }
 
     let lastScroll = 0;
-    function tick() {
-      const moving = draw();
+    function tick(now) {
+      const moving = draw(now);
       if (moving || performance.now() - lastScroll < 200) requestAnimationFrame(tick);
       else running = false;
     }
