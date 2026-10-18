@@ -572,9 +572,9 @@ td.no { color: var(--on-surface-variant); }
 
 /* ── Credits and footer ─────────────────────────────────────────────── */
 .credits { margin-top: clamp(110px, 14vw, 170px); }
-.credits h2 { font-size: clamp(2rem, 4vw, 3.4rem); max-width: 18ch; }
-.credits > p { margin-top: 16px; max-width: 60ch; color: var(--on-surface-variant); }
-.people { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.credits h2 { font-size: clamp(1.8rem, 3.4vw, 3rem); max-width: 26ch; text-wrap: balance; }
+.credits-note { margin-top: 22px; max-width: 60ch; color: var(--on-surface-variant); }
+.people { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
 .people a {
   display: inline-block; padding: 9px 16px; border-radius: 999px; text-decoration: none;
   background: var(--surface-high); font-weight: 650; font-size: 15px;
