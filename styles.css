@@ -232,7 +232,7 @@ main > section {
 .demo-island[data-state='saved'] { background: var(--base); color: var(--on-base); padding-inline: 1.5em; }
 .demo-island[data-state='saved'] .demo-island-dot { background: var(--on-base); }
 .demo-island[data-state='saved'] .demo-island-meta { color: color-mix(in srgb, var(--on-base) 72%, transparent); }
-.keys.demo-keys { left: 2.4cqi; bottom: 21cqi; --u: 2.1cqi; }
+.keys.demo-keys { left: 2.4cqi; bottom: 18cqi; --u: 2.1cqi; }
 .demo-toast {
   position: absolute; right: 2.6cqi; bottom: 6.5cqi; width: min(34cqi, 380px);
   padding: 1.1em 1.3em; border-radius: 1.4em;
