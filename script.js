@@ -1,13 +1,13 @@
 (() => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
   // ── Material 3 Expressive shapes ───────────────────────────────────
-  // Two families from the M3 shape library. Scalloped shapes (cookies,
-  // clovers) are a circle with round bumps meeting in tight notches, and the
-  // bump depth can run down to zero, which is what lets the F9 key morph from
-  // a cookie into a circle honestly. Bursts are star polygons with rounded
+  // Two families from the M3 shape library, used only for the recording
+  // figures. Scalloped shapes (cookies, clovers) are a circle with round
+  // bumps meeting in tight notches; bursts are star polygons with rounded
   // corners.
   const SHAPES = {
     cookie6: {kind: 'scallop', n: 6, a: 0.2, e: 0.15},
@@ -77,6 +77,7 @@
         localStorage.setItem('vice-site-accent', b.dataset.swatch);
       } catch (e) {}
       markSwatches();
+      themeShots();
       const meta = $('meta[name="theme-color"]');
       if (meta) meta.content = getComputedStyle(root).getPropertyValue('--bg').trim();
     });
@@ -105,83 +106,106 @@
     });
   }
 
-  // ── The F9 key ─────────────────────────────────────────────────────
-  const cookie = $('[data-cookie]');
-  const press = $('[data-press]');
-  const island = $('[data-island]');
-  const islandBox = island && island.closest('.island');
-  const restSpec = SHAPES.cookie9;
-  let amp = restSpec.a;
-  let rot = 0;
-  let target = restSpec.a;
-  function drawCookie() {
-    cookie.setAttribute('d', scallopPath({...restSpec, a: amp}, rot));
-  }
-  if (cookie) {
-    drawCookie();
-    let last = performance.now();
-    const tick = now => {
-      const dt = Math.min(48, now - last);
-      last = now;
-      // A slow turn at rest, and a spring towards the target shape.
-      if (!reduce) rot += dt * 0.00004;
-      amp += (target - amp) * Math.min(1, dt * 0.012);
-      drawCookie();
-      requestAnimationFrame(tick);
+  // ── The hero: a real clip with Vice working over it ─────────────────
+  // Everything is driven by the video's own clock, so each loop tells the
+  // same story: buffer running, keys moving, F9 at the collapse, link copied.
+  const demo = $('[data-demo]');
+  if (demo) {
+    const island = $('[data-demo-island]');
+    const text = $('.demo-island-text', island);
+    const meta = $('.demo-island-meta', island);
+    const toast = $('[data-demo-toast]');
+    const fill = $('[data-demo-fill]');
+    const caps = new Map($$('[data-demo-keys] [data-k]').map(el => [el.dataset.k, el]));
+    // [from, to, key] in seconds of the hero clip.
+    const KEYS = [
+      [0.0, 2.6, 'KeyW'], [0.4, 1.6, 'Shift'], [1.2, 1.9, 'KeyA'], [2.9, 3.2, 'Space'],
+      [3.3, 5.1, 'KeyW'], [3.6, 4.4, 'KeyD'], [4.6, 4.8, 'KeyR'], [5.4, 6.3, 'KeyS'],
+      [6.5, 8.6, 'KeyW'], [6.9, 7.6, 'KeyA'], [7.8, 8.0, 'Space'],
+    ];
+    const SAVE_AT = 6.2;
+    let state = '';
+    function setIsland(next) {
+      if (next === state) return;
+      state = next;
+      island.dataset.state = next;
+      if (next === 'saved') {
+        text.textContent = 'Clip saved';
+        meta.textContent = 'building-is-GONE';
+      } else {
+        text.textContent = 'Buffer running';
+        meta.textContent = '2:00';
+      }
+    }
+    const frame = () => {
+      const t = demo.currentTime || 0;
+      for (const [k, el] of caps) {
+        const on = KEYS.some(([a, b, key]) => key === k && t >= a && t < b);
+        if (on !== el.classList.contains('on')) el.classList.toggle('on', on);
+      }
+      setIsland(t >= SAVE_AT && t < SAVE_AT + 2.6 ? 'saved' : 'idle');
+      toast.classList.toggle('show', t >= SAVE_AT + 0.9 && t < SAVE_AT + 2.9);
+      if (fill && demo.duration) fill.style.transform = `scaleX(${t / demo.duration})`;
+      requestAnimationFrame(frame);
     };
-    requestAnimationFrame(tick);
+    requestAnimationFrame(frame);
+    if (reduce) {
+      demo.removeAttribute('autoplay');
+      demo.pause();
+    }
   }
 
-  const lines = ['Clip saved', 'holy-snipe, 20 s', 'Link copied'];
-  let busy = false;
-  async function save() {
-    if (busy) return;
-    busy = true;
-    press.classList.add('down');
-    target = 0;
-    islandBox.classList.add('live');
-    await wait(180);
-    press.classList.remove('down');
-    for (const line of lines) {
-      island.textContent = line;
-      islandBox.classList.remove('pop');
-      void islandBox.offsetWidth;
-      islandBox.classList.add('pop');
-      await wait(1100);
+  // ── Screenshots in the page's colour ───────────────────────────────
+  function themeShots() {
+    const accent = current();
+    for (const img of $$('img[data-shot]')) {
+      const want = `assets/shots/${accent}/${img.dataset.shot}.webp`;
+      if (img.getAttribute('src') !== want) img.setAttribute('src', want);
     }
-    target = restSpec.a;
-    island.textContent = 'Buffer running';
-    islandBox.classList.remove('live');
-    busy = false;
   }
-  const wait = ms => new Promise(r => setTimeout(r, ms));
-  if (press) {
-    press.addEventListener('click', save);
-    if (!reduce) setTimeout(save, 1400);
-  }
+  themeShots();
 
   // ── The rail: the page as a two minute buffer ──────────────────────
+  // Each mark sits where the fill will be when its section takes over, so
+  // a mark lights exactly as the fill reaches it.
   const fill = $('.rail-fill');
   const time = $('[data-time]');
   const marks = $$('[data-mark]');
+  let stops = [];
+  const maxScroll = () => document.documentElement.scrollHeight - innerHeight;
+  function placeMarks() {
+    const max = maxScroll();
+    stops = marks.map(m => {
+      const sec = document.querySelector(m.getAttribute('href'));
+      if (!sec || max <= 0) return 1;
+      const top = sec.getBoundingClientRect().top + scrollY;
+      return Math.min(1, Math.max(0, (top - innerHeight * 0.45) / max));
+    });
+    marks.forEach((m, i) => m.parentElement.style.setProperty('--at', `${stops[i] * 100}%`));
+  }
   function onScroll() {
-    const max = document.documentElement.scrollHeight - innerHeight;
+    const max = maxScroll();
     const f = max > 0 ? Math.min(1, scrollY / max) : 0;
     if (fill) fill.style.transform = `scaleY(${f})`;
     if (time) {
       const s = Math.round(f * 120);
       time.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
     }
-    let active = null;
-    for (const m of marks) {
-      const sec = document.querySelector(m.getAttribute('href'));
-      if (sec && sec.getBoundingClientRect().top < innerHeight * 0.45) active = m;
-    }
-    for (const m of marks) m.toggleAttribute('data-active', m === active);
+    let active = -1;
+    stops.forEach((at, i) => {
+      if (f >= at - 0.002) active = i;
+    });
+    marks.forEach((m, i) => m.toggleAttribute('data-active', i === active));
   }
+  const relayout = () => {
+    placeMarks();
+    onScroll();
+  };
   addEventListener('scroll', onScroll, {passive: true});
-  addEventListener('resize', onScroll);
-  onScroll();
+  addEventListener('resize', relayout);
+  addEventListener('load', relayout);
+  if ('ResizeObserver' in window) new ResizeObserver(relayout).observe(document.body);
+  relayout();
 
   // ── The keyboard overlay, driven by the visitor's own keys ─────────
   const keys = $('[data-keys]');

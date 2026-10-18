@@ -6,7 +6,7 @@
     <title>Vice: instant replay for Linux</title>
     <meta
       name="description"
-      content="Vice is a free, open source instant replay recorder for Linux. Press F9 to keep the last 20 seconds of your game or screen, then trim it, edit it, or share it as a link. No account, no telemetry."
+      content="Vice is a free, open source instant replay recorder for Linux. Press one key to keep the last 20 seconds of your game or screen, then trim it, edit it, or share it as a link. No account, no telemetry."
     />
     <link rel="canonical" href="https://splitshotz.github.io/Vice-Website/" />
     <meta name="theme-color" content="#11131a" />
@@ -14,7 +14,7 @@
     <meta property="og:title" content="Vice: instant replay for Linux" />
     <meta
       property="og:description"
-      content="Press F9 to keep the last 20 seconds of your game. Trim it, edit it, or send it as a link that plays in Discord. Free and open source."
+      content="Press one key to keep the last 20 seconds of your game. Trim it, edit it, or send it as a link that plays in Discord. Free and open source."
     />
     <meta property="og:url" content="https://splitshotz.github.io/Vice-Website/" />
     <meta property="og:image" content="https://splitshotz.github.io/Vice-Website/assets/og.jpg" />
@@ -95,20 +95,49 @@
     <main id="main">
       <!-- ── Hero ──────────────────────────────────────────────────────── -->
       <section class="hero" id="top">
-        <div class="hero-copy">
-          <a class="chip" href="https://github.com/splitshotz/Vice/releases/latest">
-            <span class="chip-dot" aria-hidden="true"></span>
-            Version 2.15 is out
-          </a>
-          <h1>
-            <span class="h1-line">Instant</span>
-            <span class="h1-line">replay</span>
-            <span class="h1-line h1-soft">for Linux.</span>
-          </h1>
-          <p class="lede">
-            Press F9 and the last 20 seconds on your screen become a clip you can trim, edit, or share as a
-            link that plays right in Discord. For games, streams, tutorials and bug reports.
-          </p>
+        <h1 class="statement">
+          <span class="wordmark">VICE</span> keeps the last two minutes of your screen and saves the
+          part you want when you press a key. <span class="soft">Then trim it, cut it into a montage,
+          put your keys on it, or send it as a link that plays in Discord.</span>
+        </h1>
+
+        <figure class="demo" aria-label="A clip from The Finals playing, with Vice's status, keyboard overlay and share link over it">
+          <video
+            class="demo-video"
+            src="assets/hero.mp4"
+            poster="assets/shots/hero-poster.webp"
+            width="1440"
+            height="602"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            data-demo
+          ></video>
+          <div class="demo-island" aria-hidden="true" data-demo-island>
+            <span class="demo-island-dot"></span>
+            <span class="demo-island-text">Buffer running</span>
+            <span class="demo-island-meta">2:00</span>
+          </div>
+          <div class="keys demo-keys" aria-hidden="true" data-demo-keys>
+            <div class="keys-row"><span class="gap"></span><span data-k="Digit1">1</span><span data-k="Digit2">2</span><span data-k="Digit3">3</span><span data-k="Digit4">4</span><span data-k="Digit5">5</span></div>
+            <div class="keys-row"><span class="w15" data-k="Tab">Tab</span><span data-k="KeyQ">Q</span><span data-k="KeyW">W</span><span data-k="KeyE">E</span><span data-k="KeyR">R</span></div>
+            <div class="keys-row"><span class="w15" data-k="Shift">Shift</span><span data-k="KeyA">A</span><span data-k="KeyS">S</span><span data-k="KeyD">D</span><span data-k="KeyF">F</span></div>
+            <div class="keys-row"><span class="w15" data-k="Control">Ctrl</span><span class="w4" data-k="Space"></span></div>
+          </div>
+          <div class="demo-toast" aria-hidden="true" data-demo-toast>
+            <p class="demo-toast-title">Link copied</p>
+            <p class="demo-toast-link">amber-coast-rally-signal.trycloudflare.com/c/9Rk2xQe7</p>
+            <p class="demo-toast-note">Plays in Discord. No upload.</p>
+          </div>
+          <div class="demo-scrub" aria-hidden="true">
+            <div class="demo-scrub-fill" data-demo-fill></div>
+            <i style="left: 22%"></i><i style="left: 61%"></i>
+          </div>
+        </figure>
+
+        <div class="hero-foot">
           <div class="install" id="install-hero">
             <div class="seg" role="tablist" aria-label="Install command">
               <button type="button" role="tab" aria-selected="true" data-tab="arch">Arch</button>
@@ -128,40 +157,32 @@
               <button type="button" class="copy" data-copy='inputs.vice.url = "github:splitshotz/Vice";'>Copy</button>
             </div>
           </div>
+          <ul class="facts">
+            <li><b>Free</b> and open source, GPL-3.0</li>
+            <li><b>X11 and Wayland</b>, NVIDIA, AMD and Intel</li>
+            <li><b>Version 2.15</b>, <a href="https://github.com/splitshotz/Vice/releases/latest">what's new</a></li>
+          </ul>
         </div>
 
-        <div class="hero-key">
-          <button type="button" class="press" aria-label="Press F9 to save a clip" data-press>
-            <svg class="cookie" viewBox="0 0 100 100" aria-hidden="true"><path data-cookie /></svg>
-            <span class="cap" aria-hidden="true"><span class="cap-top">F9</span></span>
-          </button>
-          <p class="island" role="status" aria-live="polite">
-            <span class="island-dot" aria-hidden="true"></span>
-            <span data-island>Buffer running</span>
-          </p>
-        </div>
-
-        <figure class="hero-shot">
+        <figure class="frame hero-shot">
           <img
-            src="assets/shots/home-1600.webp"
-            srcset="assets/shots/home-1600.webp 1600w, assets/shots/home-2560.webp 2560w"
-            sizes="(min-width: 1200px) 1100px, 92vw"
-            width="1600"
-            height="1000"
+            src="assets/shots/blue/home.webp"
+            data-shot="home"
+            width="2000"
+            height="1250"
             alt="The Vice window: quick settings for the microphone, desktop audio, public link and Game Capture, above a row of recent clips"
-            fetchpriority="high"
+            loading="lazy"
           />
         </figure>
       </section>
 
       <!-- ── The buffer ───────────────────────────────────────────────── -->
       <section class="how" id="how" aria-labelledby="how-title">
-        <p class="clip-label">Clip 01 <span>How it works</span></p>
-        <h2 id="how-title">Press the key after it happens.<br /><em>Vice already has it.</em></h2>
+        <h2 id="how-title">Press the key after it happens.</h2>
         <p class="how-lede">
           Vice holds the last two minutes in memory, so you never have to remember to start recording
-          before the good part. Press F9 and the last 20 seconds become a clip. Until you do, nothing is
-          written to disk.
+          before the good part. Press your clip key and the last 20 seconds become a clip. The key, the
+          length and the buffer are all yours to set. Until you press it, nothing is written to disk.
         </p>
         <figure class="buffer" aria-label="A two minute buffer held in memory, with the last 20 seconds marked as the clip you keep">
           <div class="buffer-track">
@@ -169,12 +190,12 @@
             <div class="buffer-keep"><span>Kept</span></div>
           </div>
           <div class="buffer-scale" aria-hidden="true">
-            <span>In memory, 2:00</span><span>1:30</span><span>1:00</span><span>0:30</span><span>F9</span>
+            <span>In memory, 2:00</span><span>1:30</span><span>1:00</span><span>0:30</span><span>Now</span>
           </div>
         </figure>
         <ol class="steps">
-          <li><b>Play or work.</b> The graphics card does the encoding, usually for under 1% of your CPU.</li>
-          <li><b>Press F9.</b> The last 20 seconds save as a clip. Double-tap for a whole match.</li>
+          <li><b>Play or work.</b> Vice keeps the last two minutes in memory. Your frame rate drops by less than 1%.</li>
+          <li><b>Press your key.</b> F9 unless you pick another. The last 20 seconds save as a clip, and a double-tap records a whole match.</li>
           <li><b>Keep it or send it.</b> Trim it, edit it, file it in a playlist, or copy its link.</li>
         </ol>
       </section>
@@ -182,7 +203,6 @@
       <!-- ── Sharing ──────────────────────────────────────────────────── -->
       <section class="block block-primary" id="share" aria-labelledby="share-title">
         <div class="block-copy">
-          <p class="clip-label">Clip 02 <span>Sharing</span></p>
           <h2 id="share-title">Send a link, not a file.</h2>
           <p>
             Every clip gets a public link the moment it saves. Paste it into Discord and it plays inline.
@@ -218,29 +238,31 @@
       <!-- ── Recording ────────────────────────────────────────────────── -->
       <section class="split" id="recording" aria-labelledby="rec-title">
         <div class="split-copy">
-          <p class="clip-label">Clip 03 <span>Recording</span></p>
-          <h2 id="rec-title">Light enough to leave on all day.</h2>
+          <h2 id="rec-title">Your game keeps its frame rate.</h2>
           <p>
-            Vice records with gpu-screen-recorder, which encodes on the graphics card: NVENC on NVIDIA,
-            VAAPI on AMD and Intel. Your game keeps its frames.
+            Recording runs on the part of your graphics card made for video, not on the cores your game
+            needs, so leaving Vice on costs you less than 1% of your frame rate. NVIDIA, AMD and Intel all work.
           </p>
         </div>
         <div class="figures" aria-label="Recording at a glance">
-          <div class="fig fig-a"><i data-shape="burst" aria-hidden="true"></i><b>&lt;1%</b><span>CPU while recording</span></div>
-          <div class="fig fig-b"><i data-shape="cookie9" aria-hidden="true"></i><b>144</b><span>frames per second</span></div>
-          <div class="fig fig-c"><i data-shape="clover8" aria-hidden="true"></i><b>AV1</b><span>HEVC and H.264 too, in 10-bit</span></div>
+          <div class="fig fig-a"><i data-shape="burst" aria-hidden="true"></i><b>&lt;1%</b><span>off your frame rate</span></div>
+          <div class="fig fig-b"><i data-shape="cookie9" aria-hidden="true"></i><b>144</b><span>fps, if your game runs it</span></div>
+          <div class="fig fig-c"><i data-shape="clover8" aria-hidden="true"></i><b>AV1</b><span>smaller files, same quality</span></div>
         </div>
-        <ul class="ticks split-ticks">
-          <li><b>Game Capture</b> records only the game's window, so Discord and notifications stay out.</li>
-          <li><b>Separate audio tracks</b> for game, voice chat and your mic, each with its own volume.</li>
-          <li><b>Sessions</b>: double-tap F9 for a whole match, and press H to mark what mattered.</li>
-        </ul>
+        <div class="split-ticks">
+          <h3 class="ticks-head">Set it up your way</h3>
+          <ul class="ticks">
+            <li><b>Every sound on its own track.</b> Game, voice chat and mic recorded separately, each with its own volume.</li>
+            <li><b>The game window or the whole screen.</b> One tile on Home switches between them, so Discord and notifications can stay out.</li>
+            <li><b>Any key, any length.</b> Your own combos, and extra keys that each save a different length.</li>
+            <li><b>Quality where you want it.</b> Frame rate, resolution, codec and 10-bit colour, or leave it on Auto.</li>
+          </ul>
+        </div>
       </section>
 
       <!-- ── Editor ───────────────────────────────────────────────────── -->
       <section class="block block-tertiary editor" id="editor" aria-labelledby="editor-title">
         <div class="block-copy">
-          <p class="clip-label">Clip 04 <span>Editor</span></p>
           <h2 id="editor-title">Cut the montage without leaving Vice.</h2>
           <p>
             Drop clips on a timeline, trim and arrange them, add titles and transitions, then export an
@@ -253,11 +275,10 @@
         </div>
         <figure class="frame frame-editor">
           <img
-            src="assets/shots/editor-1600.webp"
-            srcset="assets/shots/editor-1600.webp 1600w, assets/shots/editor-2560.webp 2560w"
-            sizes="(min-width: 1400px) 1200px, 94vw"
-            width="1600"
-            height="1000"
+            src="assets/shots/blue/editor.webp"
+            data-shot="editor"
+            width="2000"
+            height="1250"
             alt="The Vice editor with five clips on a timeline, transitions between them and a title over the preview"
             loading="lazy"
           />
@@ -267,7 +288,6 @@
       <!-- ── Keyboard overlay ─────────────────────────────────────────── -->
       <section class="overlay" id="overlay" aria-labelledby="overlay-title">
         <div class="overlay-copy">
-          <p class="clip-label">Clip 05 <span>New in 2.15</span></p>
           <h2 id="overlay-title">Show your keys.</h2>
           <p>
             A keyboard overlay for streams and clips, drawn over your game in your Vice colour. Pick a
@@ -316,26 +336,24 @@
       <section class="beyond" id="beyond" aria-labelledby="beyond-title">
         <figure class="frame frame-viewer">
           <img
-            src="assets/shots/viewer-920.webp"
-            srcset="assets/shots/viewer-920.webp 920w, assets/shots/viewer-1840.webp 1840w"
-            sizes="(min-width: 1200px) 560px, 92vw"
-            width="920"
-            height="820"
+            src="assets/shots/blue/viewer.webp"
+            data-shot="viewer"
+            width="1380"
+            height="1230"
             alt="A clip open in the Vice viewer, with the keys pressed shown over the video and a highlight marked on the timeline"
             loading="lazy"
           />
         </figure>
         <div class="beyond-copy">
-          <p class="clip-label">Clip 06 <span>Beyond games</span></p>
           <h2 id="beyond-title">Not only for games.</h2>
           <p>
-            Vice records whatever is on your screen. Double-tap F9 to record until you press it again, for a
+            Vice records whatever is on your screen. Double-tap your clip key to record until you press it again, for a
             tutorial, a bug report or a call you need to keep, and mark the moments that matter as you go.
           </p>
           <div class="who">
             <div>
               <h3>Streaming</h3>
-              <p>Run Vice beside OBS. The overlay puts your keys on stream, Game Capture keeps Discord off it, and F9 catches the moment you want to post later.</p>
+              <p>Run Vice beside OBS. The overlay puts your keys on stream, Game Capture keeps Discord off it, and one key catches the moment you want to post later.</p>
             </div>
             <div>
               <h3>Everything else</h3>
@@ -348,32 +366,29 @@
       <!-- ── Library ──────────────────────────────────────────────────── -->
       <section class="library" id="library" aria-labelledby="lib-title">
         <div class="library-copy">
-          <p class="clip-label">Clip 07 <span>Library</span></p>
           <h2 id="lib-title">Every clip, filed under the game it came from.</h2>
           <p>
-            Vice knows 347 games and files each clip into a playlist for the one you were playing. Make
+            Vice knows hundreds of games and files each clip into a playlist for the one you were playing. Make
             your own playlists too, rename anything, and find any clip from the sidebar.
           </p>
         </div>
         <div class="library-art">
           <figure class="frame frame-clips">
             <img
-              src="assets/shots/clips-1600.webp"
-              srcset="assets/shots/clips-1600.webp 1600w, assets/shots/clips-2560.webp 2560w"
-              sizes="(min-width: 1200px) 760px, 92vw"
-              width="1600"
-              height="1000"
+              src="assets/shots/blue/clips.webp"
+              data-shot="clips"
+              width="2000"
+              height="1250"
               alt="All Clips in Vice: a grid of thumbnails from Counter-Strike 2, Minecraft and The Finals, with game playlists in the sidebar"
               loading="lazy"
             />
           </figure>
           <figure class="frame frame-float">
             <img
-              src="assets/shots/trim-800.webp"
-              srcset="assets/shots/trim-800.webp 800w, assets/shots/trim-1600.webp 1600w"
-              sizes="(min-width: 1200px) 420px, 70vw"
-              width="800"
-              height="550"
+              src="assets/shots/blue/trim.webp"
+              data-shot="trim"
+              width="1200"
+              height="825"
               alt="The trim window, with Save as new clip as the main button"
               loading="lazy"
             />
@@ -390,18 +405,35 @@
       <!-- ── The rest ─────────────────────────────────────────────────── -->
       <section class="rest" aria-labelledby="rest-title">
         <h2 id="rest-title">And the rest of it.</h2>
-        <dl class="specs">
-          <div><dt>Hotkeys anywhere</dt><dd>Read from the keyboard itself, so they work in fullscreen games and on every Wayland desktop.</dd></div>
-          <div><dt>Clip presets</dt><dd>Extra keys that each save their own length, from 5 seconds to 30 minutes.</dd></div>
-          <div><dt>Out of the way</dt><dd>Vice ignores its keys while an app that uses the same ones is focused.</dd></div>
-          <div><dt>System tray</dt><dd>Close the window and Vice keeps its buffer running from the tray.</dd></div>
-          <div><dt>Older NVIDIA cards</dt><dd>The Flatpak gpu-screen-recorder keeps them encoding on the GPU.</dd></div>
-          <div><dt>Sounds that tell you</dt><dd>Different tones for saved, failed, session and highlight, each one replaceable.</dd></div>
-          <div><dt>Five colour schemes</dt><dd>The Material You themes from the buttons at the top of this page.</dd></div>
-          <div><dt>Four languages</dt><dd>English, French, German and Brazilian Portuguese, translated by people who use Vice.</dd></div>
-          <div><dt>Nothing phones home</dt><dd>No account and no telemetry. The daily update check asks GitHub for a version number and sends nothing about you.</dd></div>
-          <div><dt>Open source</dt><dd>GPL-3.0. Read every line, change it, build your own.</dd></div>
-        </dl>
+        <div class="groups">
+          <div class="group group-a">
+            <h3>For tinkerers</h3>
+            <ul>
+              <li><b>Hotkeys read from the keyboard itself</b>, so they work in fullscreen games and on every Wayland desktop.</li>
+              <li><b>Clip presets</b>: extra keys that each save their own length.</li>
+              <li><b>A blocklist</b> for games that need the same keys.</li>
+              <li><b>Your own recorder flags</b>, and a <code>vice</code> command for scripts.</li>
+            </ul>
+          </div>
+          <div class="group group-b">
+            <h3>For streamers</h3>
+            <ul>
+              <li><b>Your keys on stream</b>, in your colour, anywhere on screen.</li>
+              <li><b>Only the game in the shot</b>, with Discord and notifications left out.</li>
+              <li><b>Mic, game and chat</b> on separate tracks, each with its own volume.</li>
+              <li><b>Sounds that tell you</b> a clip saved or failed, without looking.</li>
+            </ul>
+          </div>
+          <div class="group group-c">
+            <h3>For everyone</h3>
+            <ul>
+              <li><b>Five colour schemes</b>, the ones from the top of this page.</li>
+              <li><b>Four languages</b>, translated by people who use Vice.</li>
+              <li><b>Older NVIDIA cards</b> still record without slowing the game.</li>
+              <li><b>Nothing phones home.</b> No account, no telemetry, and GPL-3.0 source.</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       <!-- ── Compatibility ────────────────────────────────────────────── -->
@@ -433,8 +465,7 @@
       <!-- ── Install ──────────────────────────────────────────────────── -->
       <section class="get" id="install" aria-labelledby="install-title">
         <div class="get-inner">
-          <p class="clip-label">Clip 08 <span>Yours</span></p>
-          <h2 id="install-title">Install it.<br />Press F9.</h2>
+          <h2 id="install-title">Install it.<br />Pick a key.</h2>
           <div class="get-grid">
             <div class="get-card">
               <h3>Arch and derivatives</h3>

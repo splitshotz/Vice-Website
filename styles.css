@@ -159,9 +159,9 @@ p { text-wrap: pretty; }
     background: var(--base); border-radius: 3px;
   }
   .rail-marks {
-    position: absolute; left: 0; top: 0; bottom: 44px;
-    display: flex; flex-direction: column; justify-content: space-between;
+    position: absolute; left: 0; top: 6px; bottom: 44px; margin: 0; padding: 0; list-style: none;
   }
+  .rail-marks li { position: absolute; left: 0; top: var(--at, 0%); transform: translateY(-50%); }
   .rail-marks a {
     position: relative; display: block; width: 48px; height: 48px; text-decoration: none;
   }
@@ -194,33 +194,70 @@ main > section {
 }
 
 /* ── Hero ───────────────────────────────────────────────────────────── */
-.hero {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  grid-template-areas: 'copy key' 'shot shot';
-  column-gap: clamp(20px, 4vw, 64px);
-  padding-top: clamp(120px, 15vh, 170px);
+.hero { padding-top: clamp(104px, 12vh, 140px); }
+.statement {
+  max-width: 50ch;
+  font-size: clamp(1.6rem, 2.45vw, 2.4rem);
+  line-height: 1.12;
+  font-weight: 640;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
-.hero::before {
-  /* The app's ambient wash, the one light source on the page. */
-  content: ''; position: absolute; z-index: -1; pointer-events: none;
-  inset: -200px -30vw auto -30vw; height: 1100px;
-  background: radial-gradient(50% 45% at 60% 35%, color-mix(in srgb, var(--ambient) 75%, transparent), transparent 75%);
-}
-.hero-copy { grid-area: copy; align-self: center; }
-h1 {
-  margin: 26px 0 28px;
-  font-size: clamp(4.2rem, 10.6vw, 10rem);
-  line-height: 0.84;
-  font-weight: 830;
-  letter-spacing: -0.06em;
-}
-.h1-line { display: block; }
-.h1-soft { font-weight: 320; color: var(--base); letter-spacing: -0.045em; }
-.lede { max-width: 34ch; font-size: clamp(18px, 1.5vw, 21px); color: var(--on-surface-variant); }
+.statement .wordmark { font-size: 0.92em; color: var(--base); letter-spacing: 0.01em; margin-right: 0.08em; }
+.statement .soft { font-weight: 420; color: var(--on-surface-variant); }
 
-.install { margin-top: 34px; max-width: 560px; }
+/* The stage: a real clip with Vice's own status, overlay and share toast. */
+.demo {
+  position: relative; margin-top: clamp(28px, 3.4vw, 44px);
+  aspect-ratio: 1440 / 602; overflow: hidden; container-type: inline-size;
+  border-radius: clamp(24px, 3.2vw, 48px);
+  background: var(--surface-lowest);
+}
+.demo-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.demo-island {
+  position: absolute; top: 3.2cqi; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 0.7em;
+  padding: 0.65em 1.2em 0.65em 0.95em; border-radius: 999px;
+  font-size: clamp(11px, 1.15cqi, 17px); font-weight: 650; white-space: nowrap;
+  background: color-mix(in srgb, var(--surface-low) 90%, transparent); color: var(--on-surface);
+  transition: background-color 0.35s var(--emph), color 0.35s, padding 0.45s var(--spring);
+}
+.demo-island-dot { width: 0.7em; height: 0.7em; border-radius: 50%; background: #ff6b6b; }
+.demo-island-meta { color: var(--on-surface-variant); font-weight: 550; font-variant-numeric: tabular-nums; }
+.demo-island[data-state='saved'] { background: var(--base); color: var(--on-base); padding-inline: 1.5em; }
+.demo-island[data-state='saved'] .demo-island-dot { background: var(--on-base); }
+.demo-island[data-state='saved'] .demo-island-meta { color: color-mix(in srgb, var(--on-base) 72%, transparent); }
+.keys.demo-keys { left: 2.4cqi; bottom: 9.5cqi; --u: 2.3cqi; }
+.demo-toast {
+  position: absolute; right: 2.6cqi; bottom: 6.5cqi; width: min(34cqi, 380px);
+  padding: 1.1em 1.3em; border-radius: 1.4em;
+  font-size: clamp(10px, 1.05cqi, 15px);
+  background: color-mix(in srgb, var(--surface-low) 94%, transparent); color: var(--on-surface);
+  opacity: 0; transform: translateY(14px) scale(0.96);
+  transition: opacity 0.3s var(--emph), transform 0.5s var(--spring);
+}
+.demo-toast.show { opacity: 1; transform: none; }
+.demo-toast-title { font-weight: 750; font-size: 1.15em; }
+.demo-toast-link { margin-top: 0.2em; color: var(--base); overflow-wrap: anywhere; }
+.demo-toast-note { margin-top: 0.35em; color: var(--on-surface-variant); }
+.demo-scrub {
+  position: absolute; left: 2.6cqi; right: 2.6cqi; bottom: 2.6cqi; height: 4px; border-radius: 2px;
+  background: color-mix(in srgb, white 22%, transparent);
+}
+.demo-scrub-fill { position: absolute; inset: 0; border-radius: 2px; background: var(--base); transform-origin: left; transform: scaleX(0); }
+.demo-scrub i {
+  position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 4px;
+  background: #ffb347; transform: rotate(45deg);
+}
+
+.hero-foot {
+  display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px);
+  align-items: end; margin-top: clamp(28px, 3.5vw, 44px);
+}
+.install { max-width: 560px; }
+.facts { display: grid; gap: 8px; justify-self: end; text-align: right; color: var(--on-surface-variant); font-size: 15px; }
+.facts b { color: var(--on-surface); font-weight: 700; }
+.facts a { color: var(--base); }
 .seg {
   display: inline-flex; padding: 4px; gap: 4px; border-radius: 26px;
   background: var(--surface-low);
@@ -247,52 +284,7 @@ h1 {
   transition: border-radius 0.35s var(--spring);
 }
 .copy:hover { border-radius: 10px; }
-
-/* The key: a keycap on an M3 cookie, which morphs into a circle on press. */
-.hero-key {
-  grid-area: key; align-self: center; justify-self: center;
-  display: grid; justify-items: center; gap: 22px;
-}
-.press {
-  position: relative; display: grid; place-items: center;
-  width: clamp(260px, 30vw, 440px); aspect-ratio: 1; padding: 0; border: 0; background: none;
-  border-radius: 50%;
-}
-.cookie { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--base); }
-.cap {
-  position: relative; display: grid; place-items: center;
-  width: 46%; aspect-ratio: 1; border-radius: 26%;
-  background: var(--surface-highest);
-  box-shadow: inset 0 -10px 0 color-mix(in srgb, black 28%, var(--surface-highest));
-  transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring), border-radius 0.4s var(--spring);
-}
-.cap-top {
-  font-size: clamp(2.6rem, 4.6vw, 4.4rem); font-weight: 760; letter-spacing: -0.04em;
-  color: var(--on-surface); transform: translateY(-5px);
-}
-.press:hover .cap { border-radius: 30%; }
-.press.down .cap {
-  transform: translateY(8px) scale(0.97);
-  box-shadow: inset 0 -2px 0 color-mix(in srgb, black 28%, var(--surface-highest));
-  border-radius: 18%;
-}
-.island {
-  display: inline-flex; align-items: center; gap: 10px;
-  height: 44px; padding: 0 20px 0 16px; border-radius: 22px;
-  background: var(--surface-high); font-weight: 650; font-size: 15px;
-  transition: background-color 0.3s, color 0.3s;
-}
-.island-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--on-surface-variant); }
-.island.live { background: var(--base); color: var(--on-base); }
-.island.live .island-dot { background: var(--on-base); }
-.island.pop { animation: pop 0.45s var(--spring); }
-@keyframes pop { from { transform: scale(0.88); } }
-
-.hero-shot {
-  grid-area: shot; margin-top: clamp(48px, 7vw, 96px);
-  border-radius: clamp(24px, 3.4vw, 48px); overflow: hidden;
-  background: var(--surface-low);
-}
+.hero-shot { margin-top: clamp(80px, 10vw, 140px); }
 
 /* ── The buffer ─────────────────────────────────────────────────────── */
 .how { padding-top: clamp(110px, 14vw, 190px); }
@@ -388,6 +380,7 @@ h1 {
 .split-copy p { color: var(--on-surface-variant); max-width: 46ch; }
 .split-ticks { grid-area: ticks; align-self: start; color: var(--on-surface-variant); }
 .split-ticks b { color: var(--on-surface); }
+.ticks-head { margin: 0 0 16px; font-size: 1.05rem; font-weight: 700; color: var(--base); letter-spacing: 0; }
 .figures { grid-area: figs; position: relative; min-height: 460px; }
 .fig {
   position: absolute; display: grid; place-content: center; justify-items: center; text-align: center;
@@ -490,16 +483,25 @@ kbd {
 /* ── The rest ───────────────────────────────────────────────────────── */
 .rest { margin-top: clamp(110px, 14vw, 190px); }
 .rest h2 { max-width: 12ch; }
-.specs {
+.groups {
   margin-top: clamp(36px, 5vw, 64px);
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(28px, 5vw, 80px);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
 }
-.specs > div {
-  display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 20px;
-  padding: 22px 0; border-top: 1px solid var(--outline-variant);
+.group {
+  padding: clamp(26px, 3vw, 40px); border-radius: 32px;
+  transition: border-radius 0.45s var(--spring);
 }
-.specs dt { font-weight: 750; font-size: 18px; letter-spacing: -0.01em; }
-.specs dd { margin: 0; color: var(--on-surface-variant); }
+.group:hover { border-radius: 48px; }
+.group h3 { margin: 0 0 22px; font-size: clamp(1.5rem, 2.2vw, 2rem); font-weight: 760; letter-spacing: -0.03em; line-height: 1.05; }
+.group ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+.group li { padding-top: 14px; border-top: 1px solid color-mix(in srgb, currentColor 16%, transparent); }
+.group li b { font-weight: 700; }
+.group code { font-size: 0.92em; }
+.group-a { background: var(--secondary-container); color: var(--on-secondary-container); }
+.group-b { background: var(--primary-container); color: var(--on-primary-container); }
+.group-c { background: var(--surface-high); color: var(--on-surface); }
+.group-c li { color: var(--on-surface-variant); }
+.group-c li b { color: var(--on-surface); }
 
 /* ── Beyond games ───────────────────────────────────────────────────── */
 .beyond {
@@ -570,10 +572,10 @@ td.no { color: var(--on-surface-variant); }
 .people a:hover { border-radius: 10px; background: var(--secondary-container); }
 .foot {
   padding: clamp(80px, 10vw, 140px) var(--pad) 40px calc(var(--pad) + var(--rail));
-  display: grid; justify-items: start; gap: 22px; overflow: hidden;
+  display: grid; justify-items: start; gap: 22px; overflow: hidden; container-type: inline-size;
 }
 .wordmark-foot {
-  font-size: clamp(6rem, 24vw, 22rem); line-height: 0.8; color: var(--surface-high);
+  font-size: min(22rem, 24.8cqi); line-height: 0.8; color: var(--surface-high);
   margin-left: -0.04em;
 }
 .foot nav { display: flex; flex-wrap: wrap; gap: 8px 22px; font-weight: 650; }
@@ -592,10 +594,9 @@ td.no { color: var(--on-surface-variant); }
   .fig-a { width: 38%; left: 4%; } .fig-b { width: 32%; right: 6%; top: 6%; } .fig-c { width: 32%; left: 36%; }
 }
 @media (max-width: 900px) {
-  .hero { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'copy' 'key' 'shot'; }
-  .hero-key { margin-top: 48px; }
-  .block, .overlay, .library, .compat, .beyond, .specs { grid-template-columns: minmax(0, 1fr); }
-  .specs > div { grid-template-columns: 1fr; gap: 4px; }
+  .hero-foot { grid-template-columns: minmax(0, 1fr); }
+  .facts { justify-self: start; text-align: left; }
+  .block, .overlay, .library, .compat, .beyond, .groups { grid-template-columns: minmax(0, 1fr); }
   .who { grid-template-columns: 1fr; }
   .library { grid-template-areas: 'copy' 'art' 'notes'; }
   .split { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'copy' 'figs' 'ticks'; }
@@ -613,4 +614,9 @@ td.no { color: var(--on-surface-variant); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* On a phone the stage is too short for the toast and the island together. */
+@container (max-width: 640px) {
+  .demo-toast, .demo-island-meta { display: none; }
 }
