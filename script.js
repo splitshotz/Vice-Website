@@ -155,6 +155,14 @@
     }
   }
 
+  const bar = $('.bar');
+  const heroMark = $('.hero-mark');
+  if (bar && heroMark && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([en]) => bar.toggleAttribute('data-hero-visible', en.isIntersecting), {
+      rootMargin: '-80px 0px 0px 0px',
+    }).observe(heroMark);
+  }
+
   // ── Screenshots in the page's colour ───────────────────────────────
   function themeShots() {
     const accent = current();
