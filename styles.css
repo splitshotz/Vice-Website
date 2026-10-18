@@ -196,15 +196,14 @@ main > section {
 /* ── Hero ───────────────────────────────────────────────────────────── */
 .hero { padding-top: clamp(104px, 12vh, 140px); }
 .statement {
-  max-width: 50ch;
-  font-size: clamp(1.6rem, 2.45vw, 2.4rem);
-  line-height: 1.12;
-  font-weight: 640;
-  letter-spacing: -0.03em;
-  text-wrap: balance;
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 0.45em;
+  font-size: clamp(1.75rem, 2.8vw, 2.6rem);
+  line-height: 1.1;
+  font-weight: 650;
+  letter-spacing: -0.025em;
 }
-.statement .wordmark { font-size: 0.92em; color: var(--base); letter-spacing: 0.01em; margin-right: 0.08em; }
-.statement .soft { font-weight: 420; color: var(--on-surface-variant); }
+.statement .wordmark { font-size: 1em; color: var(--base); letter-spacing: 0.01em; }
+.hero-what { margin: 0 0 18px; max-width: 46ch; font-size: 1.1rem; color: var(--on-surface-variant); }
 
 /* The stage: a real clip with Vice's own status, overlay and share toast. */
 .demo {
