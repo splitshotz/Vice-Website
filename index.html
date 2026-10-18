@@ -1,410 +1,503 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vice: instant replay for Linux</title>
     <meta
       name="description"
-      content="Vice is a free game clipper for Linux that shares Clips as links which play in Discord, with no upload wait or Vice file-size limit."
+      content="Vice is a free, open source instant replay recorder for Linux. Press F9 to keep the last 20 seconds of your game or screen, then trim it, edit it, or share it as a link. No account, no telemetry."
     />
-    <meta
-      name="keywords"
-      content="Linux game clipper, instant replay Linux, ShadowPlay alternative Linux, Wayland game recording, gameplay clips, Discord clip sharing, gpu-screen-recorder"
-    />
-    <meta name="author" content="Andrew Marin" />
-    <meta name="google-site-verification" content="2uVqNOBrF1jOx2E_6ZgswhSiiT6OY4UWrUbRs5JzWJc" />
-    <meta name="theme-color" content="#030609" />
-    <title>Vice | Linux game Clips with free link sharing</title>
     <link rel="canonical" href="https://splitshotz.github.io/Vice-Website/" />
-    <link rel="icon" href="assets/brand/vice-icon.svg" type="image/svg+xml" />
-
+    <meta name="theme-color" content="#11131a" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Vice" />
-    <meta property="og:title" content="Vice | Linux game Clips with free link sharing" />
+    <meta property="og:title" content="Vice: instant replay for Linux" />
     <meta
       property="og:description"
-      content="Press F9 to save a Clip, copy its free public link, and paste it in Discord. It plays there without an upload or Vice file-size limit."
+      content="Press F9 to keep the last 20 seconds of your game. Trim it, edit it, or send it as a link that plays in Discord. Free and open source."
     />
     <meta property="og:url" content="https://splitshotz.github.io/Vice-Website/" />
-    <meta property="og:image" content="https://splitshotz.github.io/Vice-Website/assets/screenshots/home.png" />
+    <meta property="og:image" content="https://splitshotz.github.io/Vice-Website/assets/og.jpg" />
     <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="974" />
-    <meta property="og:image:alt" content="The Vice clip library and capture controls" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Vice | Linux game Clips with free link sharing" />
-    <meta
-      name="twitter:description"
-      content="Save a Clip on Linux, copy its free public link, and paste it in Discord. No upload wait and no Vice file-size limit."
-    />
-    <meta name="twitter:image" content="https://splitshotz.github.io/Vice-Website/assets/screenshots/home.png" />
-
+    <link rel="icon" href="assets/brand/vice-icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="assets/fonts/figtree.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="accents.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      // Before first paint, so a returning visitor never sees the page snap
+      // from blue to the colour they picked.
+      try {
+        var a = localStorage.getItem('vice-site-accent');
+        if (a) document.documentElement.dataset.accent = a;
+      } catch (e) {}
+      document.documentElement.classList.add('js');
+    </script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "Vice",
-        "description": "A free game clipper for Linux that saves Clips and shares them through public links which play in Discord without uploading the file.",
+        "description": "A free, open source instant replay clipper for Linux.",
         "url": "https://splitshotz.github.io/Vice-Website/",
         "downloadUrl": "https://github.com/splitshotz/Vice#install",
         "operatingSystem": "Linux",
         "applicationCategory": "MultimediaApplication",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
+        "softwareVersion": "2.15.0",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
         "license": "https://www.gnu.org/licenses/gpl-3.0.html",
-        "author": {
-          "@type": "Person",
-          "name": "Andrew Marin",
-          "url": "https://github.com/splitshotz"
-        }
+        "author": {"@type": "Person", "name": "Andrew Marin", "url": "https://github.com/splitshotz"}
       }
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260821-5" />
-    <script src="script.js?v=20260821-1" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
+    <a class="skip" href="#main">Skip to content</a>
 
-    <header class="site-header">
-      <div class="page-width header-layout">
-        <a class="brand" href="#top" aria-label="Vice home">
-          <span class="brand-mark" aria-hidden="true"><span></span></span>
-          <span class="brand-word">VICE</span>
-        </a>
-
-        <nav class="site-nav" aria-label="Main navigation">
-          <a href="#how-it-works">How it works</a>
-          <a href="#features">Features</a>
-          <a href="#inside-vice">Inside Vice</a>
-        </nav>
-
-        <a
-          class="button button-tonal header-action"
-          href="https://github.com/splitshotz/Vice"
-          target="_blank"
-          rel="noreferrer"
-        >
-          View source
-        </a>
+    <header class="bar">
+      <a class="brand" href="#top" aria-label="Vice, back to the top">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4" />
+          <circle cx="12" cy="12" r="3.6" fill="currentColor" />
+        </svg>
+        <span class="wordmark">VICE</span>
+      </a>
+      <div class="bar-end">
+        <div class="swatches" role="radiogroup" aria-label="Page colour">
+          <button type="button" role="radio" data-swatch="blue" aria-label="Blue"></button>
+          <button type="button" role="radio" data-swatch="purple" aria-label="Purple"></button>
+          <button type="button" role="radio" data-swatch="green" aria-label="Green"></button>
+          <button type="button" role="radio" data-swatch="red" aria-label="Red"></button>
+          <button type="button" role="radio" data-swatch="orange" aria-label="Orange"></button>
+        </div>
+        <a class="btn btn-tonal" href="https://github.com/splitshotz/Vice">GitHub</a>
+        <a class="btn btn-filled" href="#install">Install</a>
       </div>
     </header>
 
-    <main id="main-content">
-      <section class="hero" id="top" aria-labelledby="hero-title">
-        <div class="page-width hero-copy">
-          <h1
-            id="hero-title"
-            aria-label="Game Clips that play from a link in Discord, Steam, Telegram, or Slack."
-          >
-            Game Clips that play from a link in
-            <span class="platform-window" aria-hidden="true">
-              <span class="platform-track" data-platform-track>
-                <span class="platform-line">Discord<span class="platform-period">.</span></span>
-                <span class="platform-line">Steam<span class="platform-period">.</span></span>
-                <span class="platform-line">Telegram<span class="platform-period">.</span></span>
-                <span class="platform-line">Slack<span class="platform-period">.</span></span>
-                <span class="platform-line">Discord<span class="platform-period">.</span></span>
-              </span>
-            </span>
+    <!-- The page is a replay buffer: this tape runs the length of it, counts
+         time as you scroll, and every section is a highlight on it. -->
+    <nav class="rail" aria-label="Sections">
+      <div class="rail-tape" aria-hidden="true"><div class="rail-fill"></div></div>
+      <ol class="rail-marks">
+        <li><a href="#how" data-mark><i></i><span>How it works</span></a></li>
+        <li><a href="#share" data-mark><i></i><span>Sharing</span></a></li>
+        <li><a href="#recording" data-mark><i></i><span>Recording</span></a></li>
+        <li><a href="#editor" data-mark><i></i><span>Editor</span></a></li>
+        <li><a href="#overlay" data-mark><i></i><span>Overlay</span></a></li>
+        <li><a href="#beyond" data-mark><i></i><span>Beyond games</span></a></li>
+        <li><a href="#library" data-mark><i></i><span>Library</span></a></li>
+        <li><a href="#install" data-mark><i></i><span>Install</span></a></li>
+      </ol>
+      <p class="rail-time" aria-hidden="true"><span data-time>0:00</span> / 2:00</p>
+    </nav>
+
+    <main id="main">
+      <!-- ── Hero ──────────────────────────────────────────────────────── -->
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <a class="chip" href="https://github.com/splitshotz/Vice/releases/latest">
+            <span class="chip-dot" aria-hidden="true"></span>
+            Version 2.15 is out
+          </a>
+          <h1>
+            <span class="h1-line">Instant</span>
+            <span class="h1-line">replay</span>
+            <span class="h1-line h1-soft">for Linux.</span>
           </h1>
-          <p class="hero-body">
-            Press F9 to save the last 20 seconds, then copy the free public link and paste it in Discord. The Clip plays there with no upload wait and no Vice file-size limit.
+          <p class="lede">
+            Press F9 and the last 20 seconds on your screen become a clip you can trim, edit, or share as a
+            link that plays right in Discord. For games, streams, tutorials and bug reports.
           </p>
-
-          <div class="hero-actions">
-            <a
-              class="button button-filled button-large"
-              href="https://github.com/splitshotz/Vice#install"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Install Vice
-            </a>
-            <a class="button button-outlined button-large" href="#features">See how sharing works</a>
+          <div class="install" id="install-hero">
+            <div class="seg" role="tablist" aria-label="Install command">
+              <button type="button" role="tab" aria-selected="true" data-tab="arch">Arch</button>
+              <button type="button" role="tab" aria-selected="false" data-tab="script">Other distros</button>
+              <button type="button" role="tab" aria-selected="false" data-tab="nix">NixOS</button>
+            </div>
+            <div class="cmd" data-panel="arch">
+              <code>yay -S vice-clipper</code>
+              <button type="button" class="copy" data-copy="yay -S vice-clipper">Copy</button>
+            </div>
+            <div class="cmd" data-panel="script" hidden>
+              <code>git clone https://github.com/splitshotz/Vice &amp;&amp; cd Vice &amp;&amp; ./install.sh</code>
+              <button type="button" class="copy" data-copy="git clone https://github.com/splitshotz/Vice &amp;&amp; cd Vice &amp;&amp; ./install.sh">Copy</button>
+            </div>
+            <div class="cmd" data-panel="nix" hidden>
+              <code>inputs.vice.url = "github:splitshotz/Vice";</code>
+              <button type="button" class="copy" data-copy='inputs.vice.url = "github:splitshotz/Vice";'>Copy</button>
+            </div>
           </div>
+        </div>
 
-          <div class="install-command" aria-label="Arch-based install command">
-            <span class="command-label">Arch-based:</span>
-            <code>yay -S vice-clipper</code>
-            <button
-              class="copy-button"
-              type="button"
-              data-copy-button
-              data-command="yay -S vice-clipper"
-              aria-label="Copy Arch-based install command"
-            >
-              <span data-copy-label aria-live="polite">Copy</span>
-            </button>
-          </div>
-
-          <div class="install-command install-command-other" aria-label="Other distros install command">
-            <span class="command-label">Other distros:</span>
-            <code>git clone https://github.com/splitshotz/Vice &amp;&amp; cd Vice &amp;&amp; ./install.sh</code>
-            <button
-              class="copy-button"
-              type="button"
-              data-copy-button
-              data-command="git clone https://github.com/splitshotz/Vice &amp;&amp; cd Vice &amp;&amp; ./install.sh"
-              aria-label="Copy other distros install command"
-            >
-              <span data-copy-label aria-live="polite">Copy</span>
-            </button>
-          </div>
-
-          <div class="install-command install-command-other" aria-label="NixOS flake input">
-            <span class="command-label">NixOS flake:</span>
-            <code>inputs.vice.url = &quot;github:splitshotz/Vice&quot;;</code>
-            <button
-              class="copy-button"
-              type="button"
-              data-copy-button
-              data-command="inputs.vice.url = &quot;github:splitshotz/Vice&quot;;"
-              aria-label="Copy NixOS flake input"
-            >
-              <span data-copy-label aria-live="polite">Copy</span>
-            </button>
-          </div>
-
-          <p class="install-note">
-            On NixOS, add <code>vice.nixosModules.default</code> to your modules and set
-            <code>services.vice.enable = true</code>.
-            <a href="https://github.com/splitshotz/Vice#install" target="_blank" rel="noreferrer">Full setup</a>
+        <div class="hero-key">
+          <button type="button" class="press" aria-label="Press F9 to save a clip" data-press>
+            <svg class="cookie" viewBox="0 0 100 100" aria-hidden="true"><path data-cookie /></svg>
+            <span class="cap" aria-hidden="true"><span class="cap-top">F9</span></span>
+          </button>
+          <p class="island" role="status" aria-live="polite">
+            <span class="island-dot" aria-hidden="true"></span>
+            <span data-island>Buffer running</span>
           </p>
         </div>
 
-        <figure class="hero-product page-width">
-          <div
-            class="save-demo"
-            role="img"
-            aria-label="Press F9 to save the last 20 seconds and share the Clip through a link that plays in Discord"
-          >
-            <kbd>F9</kbd>
-            <div class="save-demo-copy">
-              <strong>Clip saved</strong>
-              <span>Link ready to copy</span>
-            </div>
-            <div class="save-demo-buffer" aria-hidden="true">
-              <i></i>
-              <span>Plays in Discord</span>
-            </div>
-          </div>
-          <div class="media-crop hero-media-crop">
-            <img
-              src="assets/screenshots/home.png"
-              alt="Vice home screen showing recent Clips, capture controls, and Playlists"
-            />
-          </div>
-          <figcaption>
-            <strong>Press F9, then copy the link</strong>
-            <span>Paste it in Discord and the Clip plays there.</span>
-          </figcaption>
+        <figure class="hero-shot">
+          <img
+            src="assets/shots/home-1600.webp"
+            srcset="assets/shots/home-1600.webp 1600w, assets/shots/home-2560.webp 2560w"
+            sizes="(min-width: 1200px) 1100px, 92vw"
+            width="1600"
+            height="1000"
+            alt="The Vice window: quick settings for the microphone, desktop audio, public link and Game Capture, above a row of recent clips"
+            fetchpriority="high"
+          />
         </figure>
       </section>
 
-      <section class="workflow-section" id="how-it-works" aria-labelledby="workflow-title">
-        <div class="page-width">
-          <header class="section-heading workflow-heading">
-            <p class="eyebrow"><span aria-hidden="true"></span>How it works</p>
-            <h2 id="workflow-title">Play normally. Press F9 when something happens.</h2>
-            <p>Vice starts at login and keeps the last 20 seconds ready. You do not have to start recording first.</p>
-          </header>
-
-          <ol class="workflow-list">
-            <li>
-              <span class="step-number">01</span>
-              <div>
-                <h3>Vice keeps 20 seconds ready</h3>
-                <p>It runs in the background while you play, usually using less than one percent of your CPU.</p>
-              </div>
-            </li>
-            <li>
-              <span class="step-number">02</span>
-              <div>
-                <h3>Press F9</h3>
-                <p>One press saves a Clip. Double-tap F9 to start a full Session.</p>
-              </div>
-            </li>
-            <li>
-              <span class="step-number">03</span>
-              <div>
-                <h3>Use the Clip</h3>
-                <p>Trim or edit it, add it to a Playlist, or copy a public link and send it.</p>
-              </div>
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <section class="feature-section" id="features" aria-labelledby="features-title">
-        <div class="page-width">
-          <header class="section-heading feature-heading">
-            <p class="eyebrow"><span aria-hidden="true"></span>Why use Vice?</p>
-            <h2 id="features-title">Send a Discord link instead of a video file.</h2>
-            <p>The Clip plays in Discord without an upload. Vice also handles recording, editing, and organization.</p>
-          </header>
-
-          <div class="feature-list">
-            <article class="feature-row feature-row-highlight">
-              <header>
-                <p class="feature-label">Free, unlimited sharing</p>
-                <h3>Paste a link. The Clip plays in Discord.</h3>
-              </header>
-              <p>
-                Vice shares the Clip directly from your computer. There is no upload, no Vice file-size limit, and no waiting for the file to finish sending.
-              </p>
-              <div class="feature-fact">
-                <strong>No upload</strong>
-                <span>No quota or file-size limit.</span>
-              </div>
-            </article>
-
-            <article class="feature-row">
-              <header>
-                <p class="feature-label">Performance</p>
-                <h3>Leave Vice running while you play.</h3>
-              </header>
-              <p>
-                Typical CPU use is below one percent. Vice records through gpu-screen-recorder with NVENC or VAAPI on NVIDIA, AMD, and Intel.
-              </p>
-              <div class="feature-fact">
-                <strong>&lt;1%</strong>
-                <span>Typical CPU use.</span>
-              </div>
-            </article>
-
-            <article class="feature-row">
-              <header>
-                <p class="feature-label">Editing</p>
-                <h3>Trim and edit Clips in Vice.</h3>
-              </header>
-              <p>
-                The trimmer cuts a Clip without re-encoding it. The multi-track editor handles video, audio, text, and transitions.
-              </p>
-              <div class="feature-fact">
-                <strong>Built in</strong>
-                <span>No separate editor required.</span>
-              </div>
-            </article>
-
-            <article class="feature-row">
-              <header>
-                <p class="feature-label">Game detection</p>
-                <h3>Vice sorts Clips by game for you.</h3>
-              </header>
-              <p>
-                Vice detects known games, tags Clip filenames, adds them to matching Playlists, and updates your Discord Rich Presence.
-              </p>
-              <div class="feature-fact">
-                <strong>Automatic</strong>
-                <span>Game tags, Playlists, and Rich Presence.</span>
-              </div>
-            </article>
-
-            <article class="feature-row">
-              <header>
-                <p class="feature-label">Free and open source</p>
-                <h3>No account, subscription, or telemetry.</h3>
-              </header>
-              <p>
-                Vice is licensed under GPL-3.0. You can install it, use every feature, and read the source without creating an account.
-              </p>
-              <div class="feature-fact">
-                <a href="https://github.com/splitshotz/Vice" target="_blank" rel="noreferrer">Read the source</a>
-              </div>
-            </article>
+      <!-- ── The buffer ───────────────────────────────────────────────── -->
+      <section class="how" id="how" aria-labelledby="how-title">
+        <p class="clip-label">Clip 01 <span>How it works</span></p>
+        <h2 id="how-title">Press the key after it happens.<br /><em>Vice already has it.</em></h2>
+        <p class="how-lede">
+          Vice holds the last two minutes in memory, so you never have to remember to start recording
+          before the good part. Press F9 and the last 20 seconds become a clip. Until you do, nothing is
+          written to disk.
+        </p>
+        <figure class="buffer" aria-label="A two minute buffer held in memory, with the last 20 seconds marked as the clip you keep">
+          <div class="buffer-track">
+            <div class="buffer-tape"></div>
+            <div class="buffer-keep"><span>Kept</span></div>
           </div>
-        </div>
+          <div class="buffer-scale" aria-hidden="true">
+            <span>In memory, 2:00</span><span>1:30</span><span>1:00</span><span>0:30</span><span>F9</span>
+          </div>
+        </figure>
+        <ol class="steps">
+          <li><b>Play or work.</b> The graphics card does the encoding, usually for under 1% of your CPU.</li>
+          <li><b>Press F9.</b> The last 20 seconds save as a clip. Double-tap for a whole match.</li>
+          <li><b>Keep it or send it.</b> Trim it, edit it, file it in a playlist, or copy its link.</li>
+        </ol>
       </section>
 
-      <section class="product-section" id="inside-vice" aria-labelledby="product-title">
-        <div class="page-width">
-          <header class="section-heading product-heading">
-            <p class="eyebrow"><span aria-hidden="true"></span>Inside Vice</p>
-            <h2 id="product-title">Everything you save is in one place.</h2>
-            <p>Open a Clip, trim it, make a full edit, move it to a Playlist, or copy its sharing link.</p>
-          </header>
-
-          <figure class="product-frame product-frame-wide">
-            <div class="media-crop editor-media-crop">
-              <img
-                src="assets/screenshots/editor.png"
-                alt="Vice editor with a gameplay preview, text controls, and a multi-track timeline"
-                loading="lazy"
-              />
+      <!-- ── Sharing ──────────────────────────────────────────────────── -->
+      <section class="block block-primary" id="share" aria-labelledby="share-title">
+        <div class="block-copy">
+          <p class="clip-label">Clip 02 <span>Sharing</span></p>
+          <h2 id="share-title">Send a link, not a file.</h2>
+          <p>
+            Every clip gets a public link the moment it saves. Paste it into Discord and it plays inline.
+            There is no Vice server and no upload: the link points at your own computer, so no company keeps
+            a copy of your videos and there is no size limit.
+          </p>
+          <ul class="ticks">
+            <li>Each link uses a random token, so one link never leads anyone to your other clips.</li>
+            <li>Right-click Share for a copy that fits Discord's free upload limit, ready to paste.</li>
+            <li>Delete the clip and its link stops working. You decide what stays online.</li>
+          </ul>
+          <p class="small">Links reach your computer through a Cloudflare tunnel, which passes the video along without storing it. Without cloudflared installed, links work on your own network.</p>
+        </div>
+        <div class="chat" role="img" aria-label="A clip link pasted into a chat, showing a video preview">
+          <span class="chat-avatar" aria-hidden="true">S</span>
+          <div class="chat-body">
+            <p class="chat-name">splitshotz <span>today at 21:14</span></p>
+            <p class="chat-text">bro look at this</p>
+            <p class="chat-link">amber-coast-rally-signal.trycloudflare.com/c/k3Jd9xQe2LpA</p>
+            <div class="embed">
+              <p class="embed-site">Vice</p>
+              <p class="embed-title">holy-snipe</p>
+              <div class="embed-video">
+                <img src="assets/shots/game-1280.webp" width="1280" height="720" alt="" loading="lazy" />
+                <span class="embed-play" aria-hidden="true"></span>
+                <span class="embed-time">0:21</span>
+              </div>
             </div>
-            <figcaption>
-                <strong>Editor</strong>
-              <span>Video, audio, text, and transitions</span>
-            </figcaption>
-          </figure>
-
-          <div class="product-pair">
-            <figure class="product-frame">
-              <div class="media-crop library-media-crop">
-                <img
-                  src="assets/screenshots/home.png"
-                  alt="Vice Clip library with Playlists and recent gameplay captures"
-                  loading="lazy"
-                />
-              </div>
-              <figcaption>
-                <strong>Clip library</strong>
-                <span>Organized by game automatically</span>
-              </figcaption>
-            </figure>
-
-            <figure class="product-frame">
-              <div class="media-crop settings-media-crop">
-                <img
-                  src="assets/screenshots/settings.png"
-                  alt="Vice recording settings with buffer, frame rate, encoder, and audio controls"
-                  loading="lazy"
-                />
-              </div>
-              <figcaption>
-                <strong>Settings</strong>
-                <span>Buffer length, frame rate, encoder, audio, and more</span>
-              </figcaption>
-            </figure>
           </div>
         </div>
       </section>
 
-      <section class="install-section" aria-labelledby="install-title">
-        <div class="page-width install-layout">
-          <div>
-            <p class="eyebrow"><span aria-hidden="true"></span>Get Vice</p>
-            <h2 id="install-title">Install Vice, start a game, and press F9.</h2>
+      <!-- ── Recording ────────────────────────────────────────────────── -->
+      <section class="split" id="recording" aria-labelledby="rec-title">
+        <div class="split-copy">
+          <p class="clip-label">Clip 03 <span>Recording</span></p>
+          <h2 id="rec-title">Light enough to leave on all day.</h2>
+          <p>
+            Vice records with gpu-screen-recorder, which encodes on the graphics card: NVENC on NVIDIA,
+            VAAPI on AMD and Intel. Your game keeps its frames.
+          </p>
+        </div>
+        <div class="figures" aria-label="Recording at a glance">
+          <div class="fig fig-a"><i data-shape="burst" aria-hidden="true"></i><b>&lt;1%</b><span>CPU while recording</span></div>
+          <div class="fig fig-b"><i data-shape="cookie9" aria-hidden="true"></i><b>144</b><span>frames per second</span></div>
+          <div class="fig fig-c"><i data-shape="clover8" aria-hidden="true"></i><b>AV1</b><span>HEVC and H.264 too, in 10-bit</span></div>
+        </div>
+        <ul class="ticks split-ticks">
+          <li><b>Game Capture</b> records only the game's window, so Discord and notifications stay out.</li>
+          <li><b>Separate audio tracks</b> for game, voice chat and your mic, each with its own volume.</li>
+          <li><b>Sessions</b>: double-tap F9 for a whole match, and press H to mark what mattered.</li>
+        </ul>
+      </section>
+
+      <!-- ── Editor ───────────────────────────────────────────────────── -->
+      <section class="block block-tertiary editor" id="editor" aria-labelledby="editor-title">
+        <div class="block-copy">
+          <p class="clip-label">Clip 04 <span>Editor</span></p>
+          <h2 id="editor-title">Cut the montage without leaving Vice.</h2>
+          <p>
+            Drop clips on a timeline, trim and arrange them, add titles and transitions, then export an
+            MP4. One switch makes it fit Discord's upload limit.
+          </p>
+          <ul class="pills" aria-label="Transitions">
+            <li>Crossfade</li><li>Fade to black</li><li>Fade to white</li>
+            <li>Dip to accent</li><li>Blur dissolve</li><li>Slide</li>
+          </ul>
+        </div>
+        <figure class="frame frame-editor">
+          <img
+            src="assets/shots/editor-1600.webp"
+            srcset="assets/shots/editor-1600.webp 1600w, assets/shots/editor-2560.webp 2560w"
+            sizes="(min-width: 1400px) 1200px, 94vw"
+            width="1600"
+            height="1000"
+            alt="The Vice editor with five clips on a timeline, transitions between them and a title over the preview"
+            loading="lazy"
+          />
+        </figure>
+      </section>
+
+      <!-- ── Keyboard overlay ─────────────────────────────────────────── -->
+      <section class="overlay" id="overlay" aria-labelledby="overlay-title">
+        <div class="overlay-copy">
+          <p class="clip-label">Clip 05 <span>New in 2.15</span></p>
+          <h2 id="overlay-title">Show your keys.</h2>
+          <p>
+            A keyboard overlay for streams and clips, drawn over your game in your Vice colour. Pick a
+            corner or drag it anywhere. Vice can also keep the keys with each clip, to show in the viewer
+            or burn into an editor export.
+          </p>
+          <p class="hint" data-hint>
+            <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>Shift</kbd><kbd>Space</kbd>
+            <span>Go on, press them.</span>
+          </p>
+          <div class="try">
+            <span>Or try a colour</span>
+            <div class="swatches swatches-lg" role="radiogroup" aria-label="Overlay colour">
+              <button type="button" role="radio" data-swatch="blue" aria-label="Blue"></button>
+              <button type="button" role="radio" data-swatch="purple" aria-label="Purple"></button>
+              <button type="button" role="radio" data-swatch="green" aria-label="Green"></button>
+              <button type="button" role="radio" data-swatch="red" aria-label="Red"></button>
+              <button type="button" role="radio" data-swatch="orange" aria-label="Orange"></button>
+            </div>
           </div>
-          <div class="install-actions">
-            <a
-              class="button button-filled button-large"
-              href="https://github.com/splitshotz/Vice#install"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Get Vice for Linux
-            </a>
-            <p>Arch, Ubuntu, Debian, Fedora, openSUSE, NixOS, Hyprland, Sway, KDE, GNOME, and X11.</p>
+          <p class="small">
+            Only the panel's own keys are read, and it is off until you turn it on. Needs X11, or KDE
+            Plasma, Hyprland, Sway or Niri on Wayland.
+          </p>
+        </div>
+        <figure class="stage">
+          <img
+            src="assets/shots/game-1280.webp"
+            srcset="assets/shots/game-1280.webp 1280w, assets/shots/game-2560.webp 2560w"
+            sizes="(min-width: 1200px) 62vw, 94vw"
+            width="1280"
+            height="720"
+            alt="A frame from The Finals with the Vice keyboard overlay in the lower left"
+            loading="lazy"
+          />
+          <div class="keys" aria-hidden="true" data-keys>
+            <div class="keys-row"><span class="gap"></span><span data-k="Digit1">1</span><span data-k="Digit2">2</span><span data-k="Digit3">3</span><span data-k="Digit4">4</span><span data-k="Digit5">5</span></div>
+            <div class="keys-row"><span class="w15" data-k="Tab">Tab</span><span data-k="KeyQ">Q</span><span data-k="KeyW">W</span><span data-k="KeyE">E</span><span data-k="KeyR">R</span></div>
+            <div class="keys-row"><span class="w15" data-k="Shift">Shift</span><span data-k="KeyA">A</span><span data-k="KeyS">S</span><span data-k="KeyD">D</span><span data-k="KeyF">F</span></div>
+            <div class="keys-row"><span class="w15" data-k="Control">Ctrl</span><span class="w4" data-k="Space"></span></div>
+          </div>
+        </figure>
+      </section>
+
+      <!-- ── Beyond games ─────────────────────────────────────────────── -->
+      <section class="beyond" id="beyond" aria-labelledby="beyond-title">
+        <figure class="frame frame-viewer">
+          <img
+            src="assets/shots/viewer-920.webp"
+            srcset="assets/shots/viewer-920.webp 920w, assets/shots/viewer-1840.webp 1840w"
+            sizes="(min-width: 1200px) 560px, 92vw"
+            width="920"
+            height="820"
+            alt="A clip open in the Vice viewer, with the keys pressed shown over the video and a highlight marked on the timeline"
+            loading="lazy"
+          />
+        </figure>
+        <div class="beyond-copy">
+          <p class="clip-label">Clip 06 <span>Beyond games</span></p>
+          <h2 id="beyond-title">Not only for games.</h2>
+          <p>
+            Vice records whatever is on your screen. Double-tap F9 to record until you press it again, for a
+            tutorial, a bug report or a call you need to keep, and mark the moments that matter as you go.
+          </p>
+          <div class="who">
+            <div>
+              <h3>Streaming</h3>
+              <p>Run Vice beside OBS. The overlay puts your keys on stream, Game Capture keeps Discord off it, and F9 catches the moment you want to post later.</p>
+            </div>
+            <div>
+              <h3>Everything else</h3>
+              <p>Whole-screen sessions in one file, a screenshot key with a pen for marking things up, and Follow my mouse to record the monitor you are working on.</p>
+            </div>
           </div>
         </div>
+      </section>
+
+      <!-- ── Library ──────────────────────────────────────────────────── -->
+      <section class="library" id="library" aria-labelledby="lib-title">
+        <div class="library-copy">
+          <p class="clip-label">Clip 07 <span>Library</span></p>
+          <h2 id="lib-title">Every clip, filed under the game it came from.</h2>
+          <p>
+            Vice knows 347 games and files each clip into a playlist for the one you were playing. Make
+            your own playlists too, rename anything, and find any clip from the sidebar.
+          </p>
+        </div>
+        <div class="library-art">
+          <figure class="frame frame-clips">
+            <img
+              src="assets/shots/clips-1600.webp"
+              srcset="assets/shots/clips-1600.webp 1600w, assets/shots/clips-2560.webp 2560w"
+              sizes="(min-width: 1200px) 760px, 92vw"
+              width="1600"
+              height="1000"
+              alt="All Clips in Vice: a grid of thumbnails from Counter-Strike 2, Minecraft and The Finals, with game playlists in the sidebar"
+              loading="lazy"
+            />
+          </figure>
+          <figure class="frame frame-float">
+            <img
+              src="assets/shots/trim-800.webp"
+              srcset="assets/shots/trim-800.webp 800w, assets/shots/trim-1600.webp 1600w"
+              sizes="(min-width: 1200px) 420px, 70vw"
+              width="800"
+              height="550"
+              alt="The trim window, with Save as new clip as the main button"
+              loading="lazy"
+            />
+          </figure>
+        </div>
+        <ul class="library-notes">
+          <li><b>Trim keeps the original.</b> Your selection saves as a new clip.</li>
+          <li><b>Your own playlists</b>, with an emoji and a colour. Drag clips onto them.</li>
+          <li><b>Copy video</b> puts the file itself on your clipboard, to paste anywhere.</li>
+          <li><b>Rich Presence</b> shows the game you are clipping on Discord, with its icon.</li>
+        </ul>
+      </section>
+
+      <!-- ── The rest ─────────────────────────────────────────────────── -->
+      <section class="rest" aria-labelledby="rest-title">
+        <h2 id="rest-title">And the rest of it.</h2>
+        <dl class="specs">
+          <div><dt>Hotkeys anywhere</dt><dd>Read from the keyboard itself, so they work in fullscreen games and on every Wayland desktop.</dd></div>
+          <div><dt>Clip presets</dt><dd>Extra keys that each save their own length, from 5 seconds to 30 minutes.</dd></div>
+          <div><dt>Out of the way</dt><dd>Vice ignores its keys while an app that uses the same ones is focused.</dd></div>
+          <div><dt>System tray</dt><dd>Close the window and Vice keeps its buffer running from the tray.</dd></div>
+          <div><dt>Older NVIDIA cards</dt><dd>The Flatpak gpu-screen-recorder keeps them encoding on the GPU.</dd></div>
+          <div><dt>Sounds that tell you</dt><dd>Different tones for saved, failed, session and highlight, each one replaceable.</dd></div>
+          <div><dt>Five colour schemes</dt><dd>The Material You themes from the buttons at the top of this page.</dd></div>
+          <div><dt>Four languages</dt><dd>English, French, German and Brazilian Portuguese, translated by people who use Vice.</dd></div>
+          <div><dt>Nothing phones home</dt><dd>No account and no telemetry. The daily update check asks GitHub for a version number and sends nothing about you.</dd></div>
+          <div><dt>Open source</dt><dd>GPL-3.0. Read every line, change it, build your own.</dd></div>
+        </dl>
+      </section>
+
+      <!-- ── Compatibility ────────────────────────────────────────────── -->
+      <section class="compat" id="compat" aria-labelledby="compat-title">
+        <div class="compat-head">
+          <h2 id="compat-title">Where it runs.</h2>
+          <p>
+            Recording works on NVIDIA, AMD and Intel graphics, on X11 and on Wayland. Game detection and
+            the overlay depend on what your desktop lets Vice see.
+          </p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Desktop</th><th scope="col">Recording</th><th scope="col">Game detection</th><th scope="col">Keyboard overlay</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Hyprland</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+              <tr><th scope="row">KDE Plasma, Wayland</th><td class="yes">Yes</td><td class="yes">With kdotool</td><td class="yes">Yes</td></tr>
+              <tr><th scope="row">Sway</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+              <tr><th scope="row">Niri</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+              <tr><th scope="row">GNOME, Wayland</th><td class="yes">Yes</td><td class="part">XWayland games</td><td class="no">No</td></tr>
+              <tr><th scope="row">Any X11 desktop</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── Install ──────────────────────────────────────────────────── -->
+      <section class="get" id="install" aria-labelledby="install-title">
+        <div class="get-inner">
+          <p class="clip-label">Clip 08 <span>Yours</span></p>
+          <h2 id="install-title">Install it.<br />Press F9.</h2>
+          <div class="get-grid">
+            <div class="get-card">
+              <h3>Arch and derivatives</h3>
+              <p>From the AUR. Updates arrive with the rest of your system.</p>
+              <div class="cmd"><code>yay -S vice-clipper</code><button type="button" class="copy" data-copy="yay -S vice-clipper">Copy</button></div>
+            </div>
+            <div class="get-card">
+              <h3>Debian, Ubuntu, Fedora, openSUSE</h3>
+              <p>The installer sets up gpu-screen-recorder, Vice and its service, on derivatives too.</p>
+              <div class="cmd">
+                <code>git clone https://github.com/splitshotz/Vice &amp;&amp; cd Vice &amp;&amp; ./install.sh</code>
+                <button type="button" class="copy" data-copy="git clone https://github.com/splitshotz/Vice &amp;&amp; cd Vice &amp;&amp; ./install.sh">Copy</button>
+              </div>
+            </div>
+            <div class="get-card">
+              <h3>NixOS</h3>
+              <p>Add the flake, add <code>vice.nixosModules.default</code> to your modules and set <code>services.vice.enable = true</code>.</p>
+              <div class="cmd"><code>inputs.vice.url = "github:splitshotz/Vice";</code><button type="button" class="copy" data-copy='inputs.vice.url = "github:splitshotz/Vice";'>Copy</button></div>
+            </div>
+          </div>
+          <p class="get-after">
+            Setup details, troubleshooting and the full feature list are on
+            <a href="https://github.com/splitshotz/Vice#readme">GitHub</a>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ── Credits ──────────────────────────────────────────────────── -->
+      <section class="credits" aria-labelledby="credits-title">
+        <h2 id="credits-title">Made by Andrew Marin, with help.</h2>
+        <p>These people sent patches, translations and games. Many more found the hard bugs by opening an issue with a log attached.</p>
+        <ul class="people">
+          <li><a href="https://github.com/bryan-ovalle2">bryan-ovalle2</a></li>
+          <li><a href="https://github.com/voltek-laruelle">voltek-laruelle</a></li>
+          <li><a href="https://github.com/20plays">20plays</a></li>
+          <li><a href="https://github.com/suriyahs">suriyahs</a></li>
+          <li><a href="https://github.com/UMCEKO">UMCEKO</a></li>
+          <li><a href="https://github.com/KITE-Force">KITE-Force</a></li>
+          <li><a href="https://github.com/marcobabinski">marcobabinski</a></li>
+          <li><a href="https://github.com/MLG993">MLG993</a></li>
+          <li><a href="https://github.com/DeveloperSpoot">DeveloperSpoot</a></li>
+          <li><a href="https://github.com/jethrothelion">jethrothelion</a></li>
+          <li><a href="https://github.com/quadruplea0">quadruplea0</a></li>
+          <li><a href="https://github.com/NiyuniCidron">NiyuniCidron</a></li>
+          <li><a href="https://github.com/SlavWolf">SlavWolf</a></li>
+          <li><a href="https://github.com/LiljaGirly">LiljaGirly</a></li>
+          <li><a href="https://github.com/Sea-Bass-cmd">Sea-Bass-cmd</a></li>
+        </ul>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="page-width footer-layout">
-        <a class="brand" href="#top" aria-label="Vice home">
-          <span class="brand-mark" aria-hidden="true"><span></span></span>
-          <span class="brand-word">VICE</span>
-        </a>
-        <p>Free game clipping for Linux.</p>
-        <div class="footer-links">
-          <a href="https://github.com/splitshotz/Vice" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://github.com/splitshotz/Vice/blob/main/LICENSE" target="_blank" rel="noreferrer">GPL-3.0</a>
-        </div>
-      </div>
+    <footer class="foot">
+      <span class="wordmark wordmark-foot" aria-hidden="true">VICE</span>
+      <nav aria-label="Project links">
+        <a href="https://github.com/splitshotz/Vice">Source</a>
+        <a href="https://github.com/splitshotz/Vice/releases">Releases</a>
+        <a href="https://aur.archlinux.org/packages/vice-clipper">AUR</a>
+        <a href="https://github.com/splitshotz/Vice/issues">Report a problem</a>
+        <a href="https://github.com/splitshotz/Vice/blob/main/LICENSE">GPL-3.0</a>
+      </nav>
+      <p>No account, no subscription, no telemetry.</p>
     </footer>
+
+    <script src="script.js" defer></script>
   </body>
 </html>
